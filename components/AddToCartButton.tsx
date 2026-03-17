@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Pressable, Text } from 'react-native'
 
-type Variant = 'yellow' | 'orange' | 'outline'
+type Variant = 'primary' | 'secondary' | 'tertiary'
 
 interface AddToCartButtonProps {
     label?: string
@@ -19,19 +19,19 @@ const variantStyles: Record<
         textPressed: string
     }
 > = {
-    yellow: {
+    primary: {
         base: 'bg-primary',
         pressed: 'bg-primary-500',
         textBase: 'text-tertiary font-roboto-bold',
         textPressed: 'text-tertiary font-roboto-bold',
     },
-    orange: {
+    secondary: {
         base: 'bg-secondary',
         pressed: 'bg-secondary-500',
         textBase: 'text-white font-roboto-bold',
         textPressed: 'text-white font-roboto-bold',
     },
-    outline: {
+    tertiary: {
         base: 'bg-transparent border-2 border-secondary',
         pressed: 'bg-secondary-500 border-2 border-secondary-500',
         textBase: 'text-secondary font-roboto-bold',
@@ -41,7 +41,7 @@ const variantStyles: Record<
 
 const AddToCartButton: React.FC<AddToCartButtonProps> = ({
     label = 'Agregar al carrito',
-    variant = 'yellow',
+    variant = 'primary',
     onPress,
     disabled = false,
 }) => {
