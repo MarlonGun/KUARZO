@@ -1,10 +1,10 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 export default function FooterComponent() {
   const currentYear = new Date().getFullYear();
-
+  {/*Coment*/ }
   return (
     <View className="bg-black pt-12 pb-8 mt-4 rounded-t-[40px]">
       <View className="px-6">
