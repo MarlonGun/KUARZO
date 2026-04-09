@@ -1,25 +1,41 @@
 import React from 'react';
-import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, Text, View } from 'react-native';
+import BarraBusquedaMovil from '../components/BarraBusquedaMovil';
 import { CardProduct } from '../components/CardProduct';
 import Carrusel from '../components/Carrusel';
 import CustomButton from '../components/CustomButton';
+import FlutterComponent from '../components/Flutter';
 import Header from '../components/header';
 
 const App = () => {
 
-  // Mock de Banners Promocionales (Imágenes completas)
-  const sampleBanners = [
-    { id: 1, image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1000&auto=format&fit=crop" },
-    { id: 2, image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1000&auto=format&fit=crop" },
-    { id: 3, image: "https://images.unsplash.com/photo-1515562141207-7a8ef27ce011?q=80&w=1000&auto=format&fit=crop" },
+  // Datos de prueba para mostrar el CardProduct y el Carrusel
+  const sampleProducts = [
+    {
+      nombre: "Pulsera Piedra Volcánica",
+      descripcion: "Pulsera elaborada con piedras volcanicas y dijes de acero inoxidable.",
+      precio: 45000,
+      imagen: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1170&auto=format&fit=crop"
+    },
+    {
+      nombre: "Pulsera Premium",
+      descripcion: "Elegante pulsera con acabados premium para cualquier ocasión.",
+      precio: 55000,
+      imagen: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1170&auto=format&fit=crop"
+    },
+    {
+      nombre: "Pulsera Clásica",
+      descripcion: "Diseño minimalista ideal para el uso diario.",
+      precio: 35000,
+      imagen: "https://images.unsplash.com/photo-1573408301145-b98c46544405?q=80&w=1169&auto=format&fit=crop"
+    }
   ];
 
-  const sampleProduct = {
-    nombre: "Pulsera Volcánica",
-    descripcion: "Piedras volcánicas y dijes de acero.",
-    precio: 45000,
-    imagen: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1170&auto=format&fit=crop"
-  };
+  // Datos para el banner promocional
+  const promoBanners = [
+    { id: 1, imagen: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1200&auto=format&fit=crop" },
+    { id: 2, imagen: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1200&auto=format&fit=crop" }
+  ];
 
   // Generamos 6 productos ficticios para las recomendaciones
   const sampleProducts = Array.from({ length: 6 }).map((_, i) => ({
@@ -29,47 +45,54 @@ const App = () => {
   }));
 
   return (
-    <ScrollView className='flex-1 bg-gray-50' showsVerticalScrollIndicator={false}>
-      <Header />
-      
-      <View className="items-center mt-4">
-        <CustomButton children="Menú Principal" color="primary" className='w-1/2' />
+    <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}>
+
+      {/* 1. HEADER */}
+      <View className="mb-4">
+        <View className="shadow-md">
+          <Header />
+        </View>
       </View>
 
-      {/* 1. EJEMPLO: Carrusel como BANNER PRINCIPAL (1 item por vista) */}
-      <View className="mt-6 w-full">
-         <Carrusel
-            data={sampleBanners}
-            itemsPerPage={1}
-            gap={0} 
-            showArrows={false} // Ocultar flechas suele ser mejor UX en móvil top
-            showDots={true}
-            renderItem={(item, index, cardWidth) => (
-                <TouchableOpacity activeOpacity={0.9} className="items-center justify-center">
-                    <Image 
-                        source={{ uri: item.image }} 
-                        // Utilizamos exactamente el cardWidth provisto por el carrusel
-                        style={{ width: cardWidth, height: 180, borderRadius: 12 }} 
-                        resizeMode="cover"
-                    />
-                </TouchableOpacity>
-            )}
-         />
+      {/* BANNER PROMOCIONAL (Carrusel Automático) */}
+      <View className="mb-8">
+        <Text className="text-gray-500 font-bold px-4 mb-3 text-xs uppercase tracking-widest">Ofertas y Promociones</Text>
+        <Carrusel
+          data={promoBanners}
+          renderItem={(item) => (
+            // 👇 AQUÍ PUEDES MODIFICAR LA ALTURA DEL CARRUSEL (ejemplos: h-48, h-64, h-72, h-80) 👇
+            <View className="w-full h-80 px-4">
+              <Image
+                source={{ uri: item.imagen }}
+                className="w-full h-full rounded-2xl"
+                resizeMode="cover"
+              />
+            </View>
+          )}
+        />
       </View>
 
-      {/* 2. EJEMPLO: Carrusel como RECOMENDACIONES DE PRODUCTOS (Múltiples items) */}
-      <View className="mt-6 mb-12 w-full">
-         <Carrusel
-            title="RECOMENDACIONES"
-            data={sampleProducts}
-            showArrows={true}
-            showDots={false} // Queda más limpio sin puntos si hay muchos productos
-            // Dejamos que el Carrusel deduzca itemsPerPage basado en pantalla o responsive
-            renderItem={(item, index, cardWidth) => (
-                <CardProduct producto={item} width={cardWidth} />
-            )}
-         />
+      {/* 2. CUSTOM BUTTON */}
+      <View className="mb-8 px-4">
+        <CustomButton children="Botón Primario" color="primary" className='w-full mb-3' />
+        <CustomButton children="Botón Secundario" color="secondary" className='w-full' />
       </View>
+
+      {/* BARRA DE BUSQUEDA MOVIL */}
+      <View className="mb-8 px-4">
+        <BarraBusquedaMovil />
+      </View>
+
+      {/* 3. CARD PRODUCT */}
+      <View className="mb-8 px-4">
+        <View className="items-center">
+          <CardProduct producto={sampleProducts[0]} />
+        </View>
+      </View>
+
+      {/* 5. PIE DE PÁGINA (FooterComponent importado desde Flutter.tsx) 
+          Al estar fuera del View con flex-1, siempre se anclará al fondo */}
+      <FlutterComponent />
 
     </ScrollView>
   )

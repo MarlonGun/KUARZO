@@ -1,0 +1,45 @@
+import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { Pressable, View } from 'react-native';
+
+const BarrNaveg = () => {
+    // Estado para saber qué pestaña está activa
+    const [activeTab, setActiveTab] = useState('home');
+
+    const tabs = [
+        { id: 'home', icon: 'home' },
+        { id: 'catalog', icon: 'apps' }, // 'apps' o 'grid' funcionan genial para catálogos
+        { id: 'cart', icon: 'cart' },
+        { id: 'profile', icon: 'person' },
+    ];
+
+    return (
+        <View
+            className="absolute bottom-4 self-center w-[90%] rounded-full flex-row justify-around items-center py-1/2 border-[1.5px] border-orange-500"
+            style={{ backgroundColor: '#FED20F', elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 5 }}
+        >
+            {tabs.map((tab) => {
+                const isActive = activeTab === tab.id;
+                // Usamos la variante outline cuando está inactivo
+                const iconName = isActive ? tab.icon : `${tab.icon}-outline`;
+
+                return (
+                    <Pressable
+                        key={tab.id}
+                        onPress={() => setActiveTab(tab.id)}
+                        className={`p-3 rounded-full transition-all duration-200 ${isActive ? 'bg-orange-100' : 'bg-transparent'}`}
+                    >
+                        <Ionicons
+                            name={iconName as any}
+                            size={26}
+                            // Naranja vibrante para el activo, contorno negro para inactivos
+                            color={isActive ? "#f97316" : "#000000"}
+                        />
+                    </Pressable>
+                );
+            })}
+        </View>
+    );
+};
+
+export default BarrNaveg;

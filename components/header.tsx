@@ -16,7 +16,7 @@ const Header = () => {
 
             {/* Área del Buscador Central */}
             <View className="flex-1 px-8 max-w-3xl">
-                <View className="flex-row items-center w-full h-11 px-4 bg-white border border-gray-300 rounded-md">
+                <View className="flex-row items-center w-full h-11 px-4 bg-white border border-gray-300 rounded-full">
                     <TextInput
                         placeholder="Buscar..."
                         className="flex-1 h-full text-base text-gray-800 font-normal outline-none"

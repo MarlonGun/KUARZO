@@ -1,7 +1,8 @@
 import { useFonts } from 'expo-font';
-import { Slot, SplashScreen } from 'expo-router';
+import { SplashScreen } from 'expo-router';
 import React, { useEffect } from 'react';
 import "./global.css";
+import AppMovil from './indexMovil';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,7 +24,11 @@ const RootLayout = () => {
 
     if (!fontsLoaded && !error) return null;
 
-    return <Slot />
+    return (
+        <>
+            <AppMovil />
+        </>
+    )
 }
 
 export default RootLayout

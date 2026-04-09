@@ -1,37 +1,33 @@
-import { View } from "react-native";
+import React from 'react';
+import { Image, Text, View } from "react-native";
 import CustomButton from "./CustomButton";
 
 export const CardProduct = ({ producto, width }: { producto: any, width?: number }) => {
     const { nombre, descripcion, precio, imagen } = producto;
 
     return (
-        <View 
-            className="bg-white rounded-2xl p-6 text-center shadow-md transition duration-300"
-            style={{ width: width ?? 280 }}
-        >
+        <View className="w-full bg-white rounded-2xl p-3 shadow-md">
 
-            <View className="flex justify-center">
-                <img
-                    src={imagen}
-                    alt={nombre}
-                    className="h-[180px] object-contain"
+            <View className="flex justify-center items-center">
+                <Image
+                    source={{ uri: imagen }}
+                    className="w-full h-[120px]"
+                    resizeMode="contain"
                 />
             </View>
 
-            <h2 className="text-xl text-opensans-regular font-semibold text-gray-800 mt-4">
+            <Text className="text-sm font-semibold text-gray-800 mt-3" numberOfLines={1}>
                 {nombre}
-            </h2>
-            <p className="text-left text-sm text-opensans-regular text-gray-500 mt-2 mb-6 px-2">
+            </Text>
+            <Text className="text-xs text-gray-500 mt-1 mb-3" numberOfLines={2}>
                 {descripcion}
-            </p>
+            </Text>
 
-            <View className="flex flex-row justify-between items-center mt-4">
-
-                <CustomButton className="flex-1 mr-4">Comprar</CustomButton>
-
-                <span className="text-xl text-opensans-regular font-bold text-gray-800">
+            <View className="flex-col mt-auto items-center">
+                <Text className="text-base font-bold text-gray-800 mb-2">
                     ${new Intl.NumberFormat("es-CO").format(precio)}
-                </span>
+                </Text>
+                <CustomButton className="w-full">Comprar</CustomButton>
             </View>
 
         </View>
