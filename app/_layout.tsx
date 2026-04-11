@@ -1,6 +1,8 @@
 import { useFonts } from 'expo-font';
 import { Slot, SplashScreen } from 'expo-router';
 import React, { useEffect } from 'react';
+import CartSidebar from '../components/CartSidebar';
+import { CartProvider } from '../context/CartContext';
 import "./global.css";
 
 SplashScreen.preventAutoHideAsync();
@@ -24,7 +26,10 @@ const RootLayout = () => {
     if (!fontsLoaded && !error) return null;
 
     return (
-        <Slot />
+        <CartProvider>
+            <Slot />
+            <CartSidebar />
+        </CartProvider>
     )
 }
 

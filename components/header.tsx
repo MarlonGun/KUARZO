@@ -1,8 +1,10 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Image, Pressable, Text, TextInput, View } from 'react-native';
+import { useCart } from '../context/CartContext';
 
 const Header = () => {
+    const { toggleSidebar, totalItems } = useCart();
     return (
         <View className="flex-row items-center justify-between w-full px-6 py-4 bg-white">
 
@@ -42,8 +44,13 @@ const Header = () => {
                     </Text>
                 </Pressable>
 
-                <Pressable className="ml-2">
+                <Pressable className="ml-2 relative" onPress={toggleSidebar}>
                     <MaterialIcons name="shopping-cart" size={24} color="#4B5563" />
+                    {totalItems > 0 && (
+                        <View className="absolute -top-2 -right-3 bg-red-500 rounded-full w-5 h-5 items-center justify-center">
+                            <Text className="text-white text-xs font-bold">{totalItems}</Text>
+                        </View>
+                    )}
                 </Pressable>
             </View>
 

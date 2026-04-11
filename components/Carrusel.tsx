@@ -9,6 +9,7 @@ import {
   useWindowDimensions,
   View
 } from 'react-native';
+import { useCart } from '../context/CartContext';
 
 export type ProductData = {
   id?: string | number;
@@ -53,6 +54,7 @@ export default function Carrusel({
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
   const autoPlayInterval = 3500;
+  const { addItem } = useCart();
 
   // Autoplay para el modo slide de imágenes (Banners promocionales)
   useEffect(() => {
@@ -191,9 +193,17 @@ export default function Carrusel({
                     ${new Intl.NumberFormat("es-CO").format(Number(item.precio) || 0)}
                   </Text>
                 </View>
-                <View className="bg-[#C91843] px-3 py-3 flex-1 justify-center items-center">
+                <TouchableOpacity 
+                  className="bg-[#C91843] px-3 py-3 flex-1 justify-center items-center"
+                  onPress={() => addItem({
+                    id: String(item.id || item.cod || item.nombre),
+                    nombre: item.nombre,
+                    precio: Number(item.precio) || 0,
+                    imagen: item.imagen
+                  })}
+                >
                   <Text className="text-white font-extrabold text-sm">COMPRAR</Text>
-                </View>
+                </TouchableOpacity>
               </View>
             </View>
           </TouchableOpacity>
