@@ -1,7 +1,9 @@
+import CustomButton from "@/components/CustomButton";
+import { router } from "expo-router";
 import React from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Catalogo from "../components/Catalogo";
+import Carrusel from "../components/Carrusel";
 import FlutterComponent from "../components/Flutter";
 import Header from "../components/header";
 
@@ -118,7 +120,11 @@ const App = () => {
           <View className='bg-quaternary-950 w-full'>
             <Text className='text-quaternary-500 font-roboto-bold text-3xl ml-10 mt-20'>MAS</Text>
             <Text className='text-quaternary-500 font-roboto-bold text-5xl ml-10'>PRODUCTOS</Text>
-            <CustomButton children='Ver mas' className='bg-primary rounded-md font-roboto-bold w-60 h-10 ml-10 mt-10 justify-center items-center' />
+            <CustomButton
+              children='Ver mas'
+              className='bg-primary rounded-md font-roboto-bold w-60 h-10 ml-10 mt-10 justify-center items-center'
+              onPress={() => router.push('/catalogo')}
+            />
           </View>
         </View>
 

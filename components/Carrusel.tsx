@@ -189,7 +189,7 @@ export default function Carrusel({
 
               <View className="flex-row">
                 <TouchableOpacity
-                  className="bg-[#FED20F] px-3 py-3 flex-1 justify-center items-center rounded-md"
+                  className="bg-[#FED20F] px-3 py-3 flex-1 justify-center items-center rounded-md w-1/2 h-10"
                   onPress={() => addItem({
                     id: String(item.id || item.cod || item.nombre),
                     nombre: item.nombre,

@@ -1,6 +1,7 @@
 import CustomButton from '@/components/CustomButton';
 import Header from '@/components/header';
 import { MaterialIcons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import React from 'react';
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -22,8 +23,8 @@ export default function CartScreen() {
                     <View className="flex-1 pr-10">
                         <Text className="text-3xl font-bold text-gray-800 mb-6">Carrito de compra</Text>
 
-                        <View className="flex-row items-center mb-6 pb-2 border-b border-gray-300">
-                            <MaterialIcons name="check-box-outline-blank" size={24} color="#4B5563" />
+                        <View className="flex-row items-center mb-6 pb-2 border-b border-[#9ca3af]">
+                            <MaterialIcons name="check-box-outline-blank" size={24} color="#9ca3af" />
                             <Text className="ml-2 text-gray-700 font-medium text-base">Seleccionar todos los productos</Text>
                         </View>
 
@@ -31,10 +32,10 @@ export default function CartScreen() {
                             <Text className="text-gray-500 text-lg">No hay productos en el carrito.</Text>
                         ) : (
                             cartItems.map((item) => (
-                                <View key={item.id} className="flex-row items-center border-b border-gray-200 py-6">
-                                    <MaterialIcons name="check-box-outline-blank" size={24} color="#4B5563" />
+                                <View key={item.id} className="flex-row items-center border-b border-[#9ca3af] py-6">
+                                    <MaterialIcons name="check-box-outline-blank" size={24} color="#9ca3af" />
 
-                                    <View className="border border-gray-300 p-2 ml-4 rounded-md">
+                                    <View className="border border-[#9ca3af] p-2 ml-4 rounded-md">
                                         <Image
                                             source={{ uri: item.imagen }}
                                             className="w-24 h-24 bg-gray-100 rounded-sm"
@@ -45,7 +46,7 @@ export default function CartScreen() {
                                     <View className="flex-1 ml-6 h-24 justify-between py-1">
                                         <Text className="text-xl font-bold text-gray-800">{item.nombre}</Text>
 
-                                        <View className="flex-row items-center border border-gray-300 rounded-md w-28 mt-2">
+                                        <View className="flex-row items-center border border-[#9ca3af] rounded-md w-28 mt-2">
                                             <Pressable
                                                 className="px-3 py-1 bg-white hover:bg-gray-100 flex-1 items-center"
                                                 onPress={() => updateQuantity(item.id, item.cantidad - 1)}
@@ -65,7 +66,7 @@ export default function CartScreen() {
                                     <View className="h-24 justify-center items-end ml-4">
                                         <Text className="text-2xl font-bold text-gray-800">${item.precio.toLocaleString()}</Text>
                                         <Pressable className="mt-4" onPress={() => removeItem(item.id)}>
-                                            <Text className="text-red-500 font-medium">Eliminar</Text>
+                                            <Text className="text-[#FF0000] font-medium">Eliminar</Text>
                                         </Pressable>
                                     </View>
                                 </View>
@@ -95,7 +96,7 @@ export default function CartScreen() {
                         <CustomButton
                             color="primary"
                             className="py-4 items-center justify-center rounded-md shadow-sm"
-                            onPress={() => console.log('Procesar Compra...')}
+                            onPress={() => router.push('/checkout')}
                         >
                             Finalizar Compra
                         </CustomButton>
