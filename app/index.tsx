@@ -1,10 +1,9 @@
-import CustomButton from '@/components/CustomButton';
-import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Carrusel from '../components/Carrusel';
-import FlutterComponent from '../components/Flutter';
-import Header from '../components/header';
+import React from "react";
+import { ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Catalogo from "../components/Catalogo";
+import FlutterComponent from "../components/Flutter";
+import Header from "../components/header";
 
 const App = () => {
 
@@ -127,7 +126,7 @@ const App = () => {
         <FlutterComponent />
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default App
+export default App;
