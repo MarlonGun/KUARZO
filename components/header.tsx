@@ -6,7 +6,7 @@ import { useCart } from '../context/CartContext';
 const Header = () => {
     const { toggleSidebar, totalItems } = useCart();
     return (
-        <View className="flex-row items-center justify-between w-full px-6 py-4 bg-white">
+        <View className="flex-row items-center justify-between w-full px-6 py-4 bg-white shadow-sm">
 
             {/* Área del Logo */}
             <View className="flex-row items-center justify-center">

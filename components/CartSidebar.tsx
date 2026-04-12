@@ -23,10 +23,10 @@ const CartSidebar = () => {
     return (
         <View className="absolute top-0 right-0 bottom-0 left-0 z-50 flex-row justify-end" pointerEvents="box-none">
             {/* Overlay background para cerrar al hacer clic afuera (HERMANO DEL SIDEBAR) */}
-            <Pressable 
-                className="absolute top-0 right-0 bottom-0 left-0" 
+            <Pressable
+                className="absolute top-0 right-0 bottom-0 left-0"
                 style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
-                onPress={toggleSidebar} 
+                onPress={toggleSidebar}
             />
 
             {/* Panel lateral propiamente dicho */}
@@ -66,7 +66,7 @@ const CartSidebar = () => {
                             className="py-3 items-center justify-center rounded"
                             onPress={handleCheckout}
                         >
-                            FINALIZAR COMPRA
+                            Ir al Carrito
                         </CustomButton>
                     </View>
                 )}

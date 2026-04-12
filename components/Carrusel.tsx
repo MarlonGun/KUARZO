@@ -81,7 +81,7 @@ export default function Carrusel({
     return (
       <View className="pb-8">
         <View className="py-10 justify-center items-center">
-          <ActivityIndicator size="large" color="#C91843" />
+          <ActivityIndicator size="large" color='#FED20F' />
           <Text className="mt-4 text-gray-400 font-roboto-medium">Cargando...</Text>
         </View>
       </View>
@@ -135,7 +135,7 @@ export default function Carrusel({
             {images.map((_, idx) => (
               <View
                 key={`dot-${idx}`}
-                className={`h-2 rounded-full transition-all duration-300 ${idx === activeIndex ? 'w-6 bg-[#C91843]' : 'w-2 bg-gray-300'}`}
+                className={`h-2 rounded-full transition-all duration-300 ${idx === activeIndex ? 'w-6 bg-[#FED20F]' : 'w-2 bg-gray-300'}`}
               />
             ))}
           </View>
@@ -167,34 +167,29 @@ export default function Carrusel({
             key={item.id || item.cod || Math.random().toString()}
             activeOpacity={0.9}
             onPress={() => onProductPress && onProductPress(item)}
-            className="bg-white rounded-2xl mr-4 border border-gray-100 shadow-sm"
+            className="bg-white mr-4"
             style={{ width: 280, elevation: 3 }}
           >
-            <View className="overflow-hidden rounded-2xl flex-1 bg-white">
+            <View className="overflow-hidden flex-1 bg-transparent">
               <Image
                 source={{ uri: item.imagen }}
                 className="w-full h-44 bg-gray-100"
                 resizeMode="cover"
               />
               <View className="p-4 flex-1">
-                <Text className="text-lg font-bold text-gray-900 mb-1" numberOfLines={1}>
+                <Text className="text-lg font-bold text-quaternary-950 mb-1 text-center" numberOfLines={1}>
                   {item.nombre}
                 </Text>
                 {item.descripcion ? (
-                  <Text className="text-sm text-gray-500 mb-2 leading-tight" numberOfLines={2}>
+                  <Text className="text-sm text-quaternary-950 mb-2 leading-tight text-center" numberOfLines={2}>
                     {item.descripcion}
                   </Text>
                 ) : null}
               </View>
 
               <View className="flex-row">
-                <View className="bg-slate-900 px-3 py-3 flex-1 justify-center items-center">
-                  <Text className="text-white font-extrabold text-sm">
-                    ${new Intl.NumberFormat("es-CO").format(Number(item.precio) || 0)}
-                  </Text>
-                </View>
-                <TouchableOpacity 
-                  className="bg-[#C91843] px-3 py-3 flex-1 justify-center items-center"
+                <TouchableOpacity
+                  className="bg-[#FED20F] px-3 py-3 flex-1 justify-center items-center rounded-md"
                   onPress={() => addItem({
                     id: String(item.id || item.cod || item.nombre),
                     nombre: item.nombre,
@@ -202,8 +197,13 @@ export default function Carrusel({
                     imagen: item.imagen
                   })}
                 >
-                  <Text className="text-white font-extrabold text-sm">COMPRAR</Text>
+                  <Text className="text-xl font-roboto-bold text-quaternary-950 ">Comprar</Text>
                 </TouchableOpacity>
+                <View className="bg-transparent px-3 py-3 flex-1 justify-center items-center">
+                  <Text className="text-quaternary-950 font-roboto-bold text-xl">
+                    {'$' + new Intl.NumberFormat("es-CO").format(Number(item.precio) || 0)}
+                  </Text>
+                </View>
               </View>
             </View>
           </TouchableOpacity>

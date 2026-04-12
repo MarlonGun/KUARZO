@@ -1,37 +1,43 @@
 import React from 'react';
-import { Image, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import { useCart } from '../context/CartContext';
-import CustomButton from "./CustomButton";
 
 export const CardProduct = ({ producto }: { producto: any }) => {
     const { addItem } = useCart();
     const { nombre, descripcion, precio, imagen } = producto;
 
     return (
-        <View className="w-full bg-transparent p-3">
-
-            <View className="flex justify-center items-center">
+        <View className="w-full bg-white rounded-xl border border-gray-800 overflow-hidden m-2 shadow-sm">
+            {/* Sección superior con fondo gris */}
+            <View className="bg-[#E0E0E0] w-full h-[160px] flex justify-center items-center">
                 <Image
                     source={{ uri: imagen }}
-                    className="w-full h-[120px]"
+                    className="w-[80%] h-[80%]"
                     resizeMode="contain"
                 />
             </View>
 
-            <Text className="text-sm font-roboto-semibold text-gray-800 mt-3" numberOfLines={1}>
-                {nombre}
-            </Text>
-            <Text className="text-xs text-gray-500 mt-1 mb-3" numberOfLines={2}>
-                {descripcion}
-            </Text>
-
-            <View className="flex-col mt-auto items-center">
-                <CustomButton className="w-auto bg-color-primary font-roboto-bold text-2xl">Comprar</CustomButton>
-                <Text className="text-base font-roboto-bold text-gray-800 mb-2">
-                    ${new Intl.NumberFormat("es-CO").format(precio)}
+            {/* Sección de textos */}
+            <View className="p-4 pb-2">
+                <Text className="text-lg font-roboto-bold text-black" numberOfLines={1}>
+                    {nombre}
                 </Text>
-                <CustomButton 
-                    className="w-auto"
+                <Text className="text-sm font-opensans-regular text-gray-800 mt-2" numberOfLines={2}>
+                    {descripcion}
+                </Text>
+            </View>
+
+            {/* Barra inferior: Precio y Botón rojo */}
+            <View className="flex-row items-stretch mt-4">
+                <View className="flex-1 justify-center items-center py-4 bg-white">
+                    <Text className="text-lg font-roboto-bold text-black">
+                        {'$' + new Intl.NumberFormat("es-CO").format(precio)}
+                    </Text>
+                </View>
+
+                {/* Este es el botón rojo de la imagen que toca los bordes */}
+                <Pressable
+                    className="flex-1 bg-[#C4183C] justify-center items-center py-4"
                     onPress={() => addItem({
                         id: nombre, // Usamos el nombre como ID temporal
                         nombre: nombre,
@@ -39,10 +45,11 @@ export const CardProduct = ({ producto }: { producto: any }) => {
                         imagen: imagen
                     })}
                 >
-                    Comprar
-                </CustomButton>
+                    <Text className="text-base font-roboto-bold text-black uppercase">
+                        Comprar
+                    </Text>
+                </Pressable>
             </View>
-
         </View>
     );
-};
+};
