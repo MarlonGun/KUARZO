@@ -1,10 +1,9 @@
-import CustomButton from '@/components/CustomButton';
-import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Carrusel from '../components/Carrusel';
-import FlutterComponent from '../components/Flutter';
-import Header from '../components/header';
+import React from "react";
+import { ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Catalogo from "../components/Catalogo";
+import FlutterComponent from "../components/Flutter";
+import Header from "../components/header";
 
 const App = () => {
 
@@ -82,56 +81,14 @@ const App = () => {
   ];
 
   return (
-    <SafeAreaView className='flex-1 bg-white'>
-      <ScrollView className='flex-1 bg-white'>
-        {/* 1. HEADER */}
-        <View>
-          <View>
-            <Header />
-          </View>
-        </View>
-
-        {/* BANNER PROMOCIONAL (Carrusel Automático) */}
-        <View>
-          <Carrusel
-            type="images"
-            images={promoBanners.map(b => b.imagen)}
-            showDots={true}
-            autoPlay={true}
-          />
-        </View>
-
-        {/* 3. PRODUCTOS RECOMENDADOS (USANDO CARRUSEL) */}
-        <View className="items-center px-4 py-10">
-          <Text className="text-gray-500 font-roboto-bold px-4 mb-3 text-xl uppercase tracking-widest">PRODUCTOS DESTACADOS</Text>
-        </View>
-        <View className="mb-8 mx-80 px-8 py-10">
-          <Carrusel
-            type="products"
-            products={sampleProducts}
-            onProductPress={(item) => console.log('Producto seleccionado:', item.nombre)}
-          />
-        </View>
-
-        {/* 3. PRODUCTOS RECOMENDADOS SEGUNDA PARTE (USANDO CARRUSEL) */}
-        <View className="mb-20 mx-80 px-8 flex flex-row">
-          <Carrusel
-            type="products"
-            products={sampleProducts2}
-            onProductPress={(item) => console.log('Producto seleccionado:', item.nombre)}
-          />
-          <View className='bg-quaternary-950 w-full'>
-            <Text className='text-quaternary-500 font-roboto-bold text-3xl ml-10 mt-20'>PIEDRAS</Text>
-            <Text className='text-quaternary-500 font-roboto-bold text-5xl ml-10'>VOLCANICAS</Text>
-            <CustomButton children='Ver mas' className='bg-primary font-roboto-bold text-2xl w-60 ml-10 mt-10' />
-          </View>
-        </View>
-
-        {/* 5. PIE DE PÁGINA */}
+    <SafeAreaView className="flex-1 bg-white">
+      <ScrollView className="flex-1 bg-white">
+        <Header />
+        <Catalogo />
         <FlutterComponent />
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default App
+export default App;
