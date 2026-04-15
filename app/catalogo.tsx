@@ -1,4 +1,6 @@
 import { CardProduct } from "@/components/CardProduct";
+import BarrNaveg from "@/components/BarrNaveg";
+import BarraBusquedaMovil from "@/components/BarraBusquedaMovil";
 import FlutterComponent from "@/components/Flutter";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
@@ -126,6 +128,7 @@ const secciones = [
 
 const CatalogoScreen = () => {
   const { width } = useWindowDimensions();
+  const esMobile = width < 768;
   const [grupoActivo, setGrupoActivo] = useState("TODOS");
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
 
@@ -139,9 +142,14 @@ const CatalogoScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView className="flex-1 bg-white">
-        {/* HEADER */}
-        <Header />
+      <ScrollView className="flex-1 bg-white" contentContainerStyle={esMobile ? { paddingBottom: 110 } : undefined}>
+        {esMobile ? (
+          <View style={{ backgroundColor: "#FED20F" }}>
+            <BarraBusquedaMovil />
+          </View>
+        ) : (
+          <Header />
+        )}
 
         <View className="px-5 pt-6 bg-white w-full">
             <Pressable className="flex-row items-center gap-2 self-start" onPress={() => router.back()}>
@@ -154,7 +162,7 @@ const CatalogoScreen = () => {
 
         {/* CATÁLOGO */}
         <View className="bg-white px-4 py-8">
-          <View className="w-full bg-white px-5 py-5">
+          <View className="mx-auto w-full max-w-6xl overflow-hidden rounded-[28px] bg-white px-4 py-5 shadow-sm md:px-5">
             <View className={esDesktop ? "flex-row" : "flex-col"}>
               <View
                 className={
@@ -223,12 +231,11 @@ const CatalogoScreen = () => {
                 ))}
               </View>
 
-              <View className={esDesktop ? "flex-1 pl-6" : "pt-5"}>
+              <View className={esDesktop ? "flex-1 pl-6" : "w-full pt-5"}>
                 <View
-                  className={`mb-6 items-center justify-between gap-4 ${esDesktop ? "flex-row" : "flex-col"}`}
+                  className={`mb-6 gap-4 ${esDesktop ? "flex-row items-center justify-between" : "flex-col items-stretch"}`}
                 >
-
-                  <View className="flex-row items-center gap-3">
+                  <View className={`gap-3 ${esDesktop ? "flex-row items-center" : "flex-row flex-wrap items-center"}`}>
                     <View className="rounded-lg bg-[#f6f7fb] px-3 py-2">
                       <Text className="font-opensans-regular text-xs text-[#6b7280]">
                         {seccionActiva.titulo} / {categoriaActiva}
@@ -249,18 +256,18 @@ const CatalogoScreen = () => {
                 </View>
 
                 <ScrollView
-                  className="max-h-[600px]"
+                  className="max-h-[600px] w-full"
                   nestedScrollEnabled={true}
                   showsVerticalScrollIndicator={true}
                 >
-                  <View className="flex-row flex-wrap gap-x-[1.75%]">
+                  <View className="flex-row flex-wrap -mx-[1%]">
                     {productosFiltrados.map((producto) => (
                       <View
                         key={producto.id}
                         style={{
-                          width: esDesktop ? "18.6%" : "48.5%",
+                          width: esDesktop ? (grillaCompacta ? "18%" : "31.33%") : "48%",
                         }}
-                        className="mb-20"
+                        className="mb-8 mx-[1%]"
                       >
                         <CardProduct producto={producto} />
                       </View>
@@ -281,8 +288,9 @@ const CatalogoScreen = () => {
             </View>
           </View>
         </View>
-        <FlutterComponent />
+        {!esMobile ? <FlutterComponent /> : null}
       </ScrollView>
+      {esMobile ? <BarrNaveg /> : null}
     </SafeAreaView>
   );
 };

@@ -1,13 +1,18 @@
 import CustomButton from "@/components/CustomButton";
+import BarrNaveg from "@/components/BarrNaveg";
+import BarraBusquedaMovil from "@/components/BarraBusquedaMovil";
+import Catalogo from "@/components/Catalogo";
 import { router } from "expo-router";
 import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Carrusel from "../components/Carrusel";
 import FlutterComponent from "../components/Flutter";
 import Header from "../components/header";
 
 const App = () => {
+  const { width } = useWindowDimensions();
+  const esMobile = width < 768;
 
   // Datos de prueba para mostrar el CardProduct y el Carrusel
   const sampleProducts = [
@@ -84,9 +89,14 @@ const App = () => {
 
   return (
     <SafeAreaView className='flex-1 bg-white'>
-      <ScrollView className='flex-1 bg-white'>
-        {/* 1. HEADER */}
-        <Header />
+      <ScrollView className='flex-1 bg-white' contentContainerStyle={esMobile ? { paddingBottom: 110 } : undefined}>
+        {esMobile ? (
+          <View style={{ backgroundColor: "#FED20F" }}>
+            <BarraBusquedaMovil />
+          </View>
+        ) : (
+          <Header />
+        )}
 
         {/* BANNER PROMOCIONAL (Carrusel Automático) */}
         <View>
@@ -102,7 +112,7 @@ const App = () => {
         <View className="items-center px-4 py-10">
           <Text className="text-gray-500 font-roboto-bold px-4 mb-3 text-xl uppercase tracking-widest">PRODUCTOS DESTACADOS</Text>
         </View>
-        <View className="mb-8 mx-80 px-8 py-10">
+        <View className={esMobile ? "mb-8 px-4 py-4" : "mb-8 mx-80 px-8 py-10"}>
           <Carrusel
             type="products"
             products={sampleProducts}
@@ -111,13 +121,13 @@ const App = () => {
         </View>
 
         {/* 3. PRODUCTOS RECOMENDADOS SEGUNDA PARTE (USANDO CARRUSEL) */}
-        <View className="mb-20 mx-80 px-8 flex flex-row">
+        <View className={esMobile ? "mb-8 px-4" : "mb-20 mx-80 flex flex-row px-8"}>
           <Carrusel
             type="products"
             products={sampleProducts2}
             onProductPress={(item) => router.push({ pathname: '/detalleProd', params: { id: item.id || item.nombre, nombre: item.nombre, descripcion: item.descripcion, precio: item.precio, imagen: item.imagen, categoria: item.categoria || '' } })}
           />
-          <View className='bg-quaternary-950 w-full'>
+          <View className={esMobile ? 'mt-4 w-full bg-quaternary-950 px-4 py-8' : 'w-full bg-quaternary-950'}>
             <Text className='text-quaternary-500 font-roboto-bold text-3xl ml-10 mt-20'>MAS</Text>
             <Text className='text-quaternary-500 font-roboto-bold text-5xl ml-10'>PRODUCTOS</Text>
             <CustomButton
@@ -128,9 +138,12 @@ const App = () => {
           </View>
         </View>
 
+        {esMobile ? <Catalogo /> : null}
+
         {/* 5. PIE DE PÁGINA */}
-        <FlutterComponent />
+        {!esMobile ? <FlutterComponent /> : null}
       </ScrollView>
+      {esMobile ? <BarrNaveg /> : null}
     </SafeAreaView>
   );
 };

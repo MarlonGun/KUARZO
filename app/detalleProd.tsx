@@ -1,4 +1,6 @@
 import CustomButton from '@/components/CustomButton';
+import BarrNaveg from '@/components/BarrNaveg';
+import BarraBusquedaMovil from '@/components/BarraBusquedaMovil';
 import Header from '@/components/header';
 import { useLocalSearchParams, router } from 'expo-router';
 import { MaterialIcons } from "@expo/vector-icons";
@@ -21,6 +23,7 @@ const DetalleProdLayout = () => {
     // Lee el ancho disponible para cambiar la distribucion entre modo escritorio y compacto.
     const { width } = useWindowDimensions();
     const isCompact = width < 1100;
+    const esMobile = width < 768;
     const { addItem } = useCart();
 
     const params = useLocalSearchParams();
@@ -69,9 +72,14 @@ const DetalleProdLayout = () => {
 
     return (
         <SafeAreaView className="flex-1 bg-white">
-            <ScrollView className="flex-1 bg-white" showsVerticalScrollIndicator={false}>
-                {/* Header reutilizable de la tienda. */}
-                <Header />
+            <ScrollView className="flex-1 bg-white" showsVerticalScrollIndicator={false} contentContainerStyle={esMobile ? { paddingBottom: 110 } : undefined}>
+                {esMobile ? (
+                    <View style={{ backgroundColor: '#FED20F' }}>
+                        <BarraBusquedaMovil />
+                    </View>
+                ) : (
+                    <Header />
+                )}
 
                 <View className="px-8 pt-6 bg-white w-full max-w-6xl mx-auto">
                     <Pressable className="flex-row items-center gap-2 self-start" onPress={() => router.back()}>
@@ -232,6 +240,7 @@ const DetalleProdLayout = () => {
                     </View>
                 </View>
             </ScrollView>
+            {esMobile ? <BarrNaveg /> : null}
         </SafeAreaView>
     );
 };

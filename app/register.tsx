@@ -1,4 +1,6 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import BarrNaveg from '@/components/BarrNaveg';
+import BarraBusquedaMovil from '@/components/BarraBusquedaMovil';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
@@ -13,10 +15,13 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
+    useWindowDimensions,
     View
 } from 'react-native';
 
 const RegisterScreen: React.FC = () => {
+    const { width } = useWindowDimensions();
+    const esMobile = width < 768;
 
     const [primerNombre, setPrimerNombre] = useState<string>('');
     const [segundoNombre, setSegundoNombre] = useState<string>('');
@@ -51,11 +56,16 @@ const RegisterScreen: React.FC = () => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
+            {esMobile ? (
+                <View style={{ backgroundColor: '#FED20F' }}>
+                    <BarraBusquedaMovil />
+                </View>
+            ) : null}
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1 }}
             >
-                <ScrollView contentContainerStyle={styles.container}>
+                <ScrollView contentContainerStyle={[styles.container, esMobile ? { paddingBottom: 110, justifyContent: 'flex-start' } : null]}>
 
                     <View className="bg-white w-full max-w-6xl mx-auto">
                         <Pressable className="flex-row items-center gap-2 self-start mt-6" onPress={() => router.back()}>
@@ -204,6 +214,7 @@ const RegisterScreen: React.FC = () => {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
+            {esMobile ? <BarrNaveg /> : null}
         </SafeAreaView>
     );
 };

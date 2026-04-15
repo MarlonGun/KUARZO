@@ -8,34 +8,32 @@ export const CardProduct = ({ producto }: { producto: any }) => {
     const { id, nombre, descripcion, precio, imagen, categoria } = producto;
 
     return (
-        <View className="w-full bg-transparent">
+        <View className="w-full overflow-hidden rounded-2xl border border-[#eef1f5] bg-white">
             <Pressable onPress={() => router.push({ pathname: '/detalleProd', params: { id: id || nombre, nombre, descripcion, precio, imagen, categoria } })}>
                 {/* Sección superior con fondo gris */}
-                <View className="bg-transparent w-full h-44 flex justify-center items-center">
+                <View className="h-44 w-full items-center justify-center bg-[#f8fafc] px-3">
                     <Image
                         source={{ uri: imagen }}
-                        className="w-full h-44"
+                        className="h-40 w-full"
                         resizeMode="contain"
                     />
                 </View>
 
                 {/* Sección de textos */}
-                <View className="p-4 pb-2 h-24 justify-center">
-                    <Text className="text-lg font-roboto-bold text-black text-center" numberOfLines={1}>
+                <View className="h-28 justify-center px-4 pb-2 pt-4">
+                    <Text className="text-center font-roboto-bold text-base text-black" numberOfLines={1}>
                         {nombre}
                     </Text>
-                    <Text className="text-sm font-opensans-regular text-gray-800 mt-2 text-center" numberOfLines={2}>
+                    <Text className="mt-2 text-center font-opensans-regular text-sm text-gray-800" numberOfLines={2}>
                         {descripcion}
                     </Text>
                 </View>
             </Pressable>
 
             {/* Barra inferior: Precio y Botón rojo */}
-            <View className="flex-row items-stretch mt-4">
-
-                {/* Este es el botón rojo de la imagen que toca los bordes */}
+            <View className="flex-row border-t border-[#eef1f5]">
                 <Pressable
-                    className="flex-1 bg-primary justify-center items-center py-4 rounded-md w-1/2 h-10"
+                    className="min-h-14 flex-1 items-center justify-center bg-primary px-3 py-4"
                     onPress={() => addItem({
                         id: nombre, // Usamos el nombre como ID temporal
                         nombre: nombre,
@@ -43,13 +41,13 @@ export const CardProduct = ({ producto }: { producto: any }) => {
                         imagen: imagen
                     })}
                 >
-                    <Text className="text-base font-roboto-bold text-black uppercase">
+                    <Text className="text-center text-sm font-roboto-bold uppercase text-black">
                         Comprar
                     </Text>
                 </Pressable>
 
-                <View className="flex-1 justify-center items-center py-4 bg-white">
-                    <Text className="text-xl font-roboto-bold text-black">
+                <View className="min-h-14 flex-1 items-center justify-center bg-white px-3 py-4">
+                    <Text className="text-center text-lg font-roboto-bold text-black">
                         {'$' + new Intl.NumberFormat("es-CO").format(precio)}
                     </Text>
                 </View>
