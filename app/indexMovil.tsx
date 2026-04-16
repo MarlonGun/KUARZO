@@ -1,7 +1,7 @@
 import BarrNaveg from '@/components/BarrNaveg';
 import { CardProduct } from '@/components/CardProduct';
 import React from 'react';
-import { Image, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import BarraBusquedaMovil from '../components/BarraBusquedaMovil';
 import Carrusel from '../components/Carrusel';
 
@@ -41,35 +41,29 @@ const AppMovil = () => {
 
     return (
         <View className="flex-1 bg-white">
-            <ScrollView contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white', paddingBottom: 100 }}>
+            <ScrollView contentContainerStyle={{ backgroundColor: 'white', paddingBottom: 120, paddingHorizontal: 16 }}>
 
                 <View className="mb-4 pt-1" style={{ backgroundColor: '#FED20F' }}>
                     <BarraBusquedaMovil />
                 </View>
 
                 <View className="mb-8">
-                    <Text className="text-gray-500 font-bold px-4 mb-3 text-xs uppercase tracking-widest">Ofertas y Promociones</Text>
+                    <Text className="text-gray-500 font-bold mb-3 text-xs uppercase tracking-widest">Ofertas y Promociones</Text>
                     <Carrusel
-                        data={promoBanners}
-                        renderItem={(item: any) => (
-                            <View className="w-full h-80 px-4">
-                                <Image
-                                    source={{ uri: item.imagen }}
-                                    className="w-full h-full rounded-2xl"
-                                    resizeMode="cover"
-                                />
-                            </View>
-                        )}
+                        type="images"
+                        images={promoBanners.map(b => b.imagen)}
+                        showDots={true}
+                        autoPlay={true}
                     />
                 </View>
 
                 <View className='mb-8'>
-                    <Text className='text-gray-500 font-bold px-4 mb-3 text-xs uppercase tracking-widest'>Productos Destacados</Text>
+                    <Text className='text-gray-500 font-bold mb-3 text-xs uppercase tracking-widest'>Productos Destacados</Text>
 
-                    <View className="flex-row flex-wrap justify-between px-4">
+                    <View className="flex-col">
                         {sampleProducts.map((prod, index) => (
-                            <View key={index} className="w-[48%] mb-4 rounded-2xl">
-                                <CardProduct producto={prod} />
+                            <View key={index} className="w-full mb-4 rounded-2xl">
+                                <CardProduct producto={prod} variant="mobile" />
                             </View>
                         ))}
                     </View>

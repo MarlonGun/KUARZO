@@ -8,7 +8,15 @@ module.exports = {
   ],
   presets: [require("nativewind/preset")],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        'xs': '375px', // Small phones
+        'sm': '640px', // Large phones
+        'md': '768px', // Tablets
+        'lg': '1024px', // Small laptops
+        'xl': '1280px', // Desktops
+      },
+    },
 
     fontFamily: {
       'roboto-bold': ['Roboto-Bold', 'sans-serif'],

@@ -7,18 +7,19 @@ import { useCart } from '../context/CartContext';
 const Header = () => {
     const { toggleSidebar, totalItems } = useCart();
     return (
-        <View className="flex-row items-center justify-between w-full px-6 py-4 bg-white shadow-sm">
+        <View className="flex-row items-center justify-between w-full px-4 sm:px-6 py-4 bg-white shadow-sm">
 
             {/* Área del Logo */}
             <View className="flex-row items-center justify-center">
                 <Image
                     source={require('../assets/images/logo_header.png')}
-                    style={{ width: 140, height: 40, resizeMode: 'contain' }}
+                    className="w-20 sm:w-36 h-8 sm:h-10"
+                    resizeMode='contain'
                 />
             </View>
 
-            {/* Área del Buscador Central */}
-            <View className="flex-1 px-8 max-w-3xl">
+            {/* Área del Buscador Central - Hidden on mobile, shown on sm and up */}
+            <View className="hidden sm:flex flex-1 px-8 max-w-3xl">
                 <View className="flex-row items-center w-full h-11 px-4 bg-white border border-gray-300 rounded-full">
                     <TextInput
                         placeholder="Buscar..."
@@ -32,14 +33,14 @@ const Header = () => {
             </View>
 
             {/* Área de Acciones */}
-            <View className="flex-row items-center gap-6">
-                <Pressable onPress={() => router.push('/login')}>
+            <View className="flex-row items-center gap-2 sm:gap-6">
+                <Pressable onPress={() => router.push('/login')} className="hidden sm:flex">
                     <Text className="text-base font-roboto-medium text-gray-700 hover:text-gray-900">
                         Login
                     </Text>
                 </Pressable>
 
-                <Pressable onPress={() => router.push('/register')}>
+                <Pressable onPress={() => router.push('/register')} className="hidden sm:flex">
                     <Text className="text-base font-roboto-medium text-gray-700 hover:text-gray-900">
                         Sign Up
                     </Text>

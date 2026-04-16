@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  ScrollView, Text, TouchableOpacity,
-  useWindowDimensions,
-  View
+    ActivityIndicator,
+    FlatList,
+    Image,
+    NativeScrollEvent,
+    NativeSyntheticEvent,
+    ScrollView, Text, TouchableOpacity,
+    useWindowDimensions,
+    View
 } from 'react-native';
 import { useCart } from '../context/CartContext';
 
@@ -51,6 +51,7 @@ export default function Carrusel({
 }: CarruselProps) {
 
   const { width: screenWidth } = useWindowDimensions();
+  const containerWidth = screenWidth - 32; // Ajuste para paddingHorizontal: 16 en ScrollView
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
   const autoPlayInterval = 3500;
@@ -73,9 +74,9 @@ export default function Carrusel({
 
   const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const x = event.nativeEvent.contentOffset.x;
-    const newIndex = Math.round(x / screenWidth);
+    const newIndex = Math.round(x / containerWidth);
     setActiveIndex(newIndex);
-  }, [screenWidth]);
+  }, [containerWidth]);
 
   if (loading) {
     return (
@@ -110,20 +111,22 @@ export default function Carrusel({
           bounces={false}
           onScroll={handleScroll}
           scrollEventThrottle={16}
+          snapToInterval={containerWidth}
+          decelerationRate="fast"
           getItemLayout={(_data, index) => ({
-            length: screenWidth,
-            offset: screenWidth * index,
+            length: containerWidth,
+            offset: containerWidth * index,
             index,
           })}
           renderItem={({ item }) => (
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => onImagePress && onImagePress(item)}
-              style={{ width: screenWidth }}
+              style={{ width: containerWidth }}
             >
               <Image
                 source={{ uri: item }}
-                className="w-full h-[500px] bg-gray-200"
+                className="w-full h-64 sm:h-80 bg-gray-200"
                 resizeMode="cover"
               />
             </TouchableOpacity>

@@ -27,10 +27,10 @@ export default function CartScreen() {
                 </View>
 
                 {/* Contenido Principal */}
-                <View className="px-10 max-w-7xl mx-auto w-full flex-row">
+                <View className="px-4 sm:px-10 max-w-7xl mx-auto w-full flex-col sm:flex-row">
 
                     {/* Lado izquierdo: Lista de Productos */}
-                    <View className="flex-1 pr-10">
+                    <View className="flex-1 pr-0 sm:pr-10 mb-8 sm:mb-0">
                         <Text className="text-3xl font-bold text-gray-800 mb-6">Carrito de compra</Text>
 
                         <View className="flex-row items-center mb-6 pb-2 border-b border-[#9ca3af]">
@@ -85,7 +85,7 @@ export default function CartScreen() {
                     </View>
 
                     {/* Lado derecho: Resumen */}
-                    <View className="w-[380px] mt-16">
+                    <View className="w-full sm:w-[380px] mt-0 sm:mt-16">
                         <Text className="text-xl font-bold text-gray-800 mb-6">Resumen de compra</Text>
 
                         <View className="mb-6">

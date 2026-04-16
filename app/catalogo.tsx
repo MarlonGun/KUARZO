@@ -1,17 +1,17 @@
 import { CardProduct } from "@/components/CardProduct";
 import FlutterComponent from "@/components/Flutter";
 import { MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
-  Pressable,
-  ScrollView,
-  Text,
-  useWindowDimensions,
-  View
+    Pressable,
+    ScrollView,
+    Text,
+    useWindowDimensions,
+    View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/header";
-import { router } from "expo-router";
 
 type Producto = {
   id: string;
@@ -262,7 +262,7 @@ const CatalogoScreen = () => {
                         }}
                         className="mb-20"
                       >
-                        <CardProduct producto={producto} />
+                        <CardProduct producto={producto} variant={!esDesktop ? 'mobile' : 'default'} />
                       </View>
                     ))}
                   </View>

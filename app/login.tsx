@@ -40,7 +40,7 @@ const LoginScreen: React.FC = () => {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1 }}
             >
-                <ScrollView contentContainerStyle={styles.container}>
+                <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 16, paddingVertical: 20 }} className="bg-white">
 
                     <View className="bg-white w-full max-w-6xl mx-auto">
                         <Pressable className="flex-row items-center gap-2 self-start mt-6" onPress={() => router.back()}>
@@ -54,20 +54,20 @@ const LoginScreen: React.FC = () => {
                     {/* Logo */}
                     <Image
                         source={require('../assets/images/logo.png')}
-                        style={styles.logo}
+                        className="w-32 h-32 sm:w-40 sm:h-40 self-center mb-8"
                     />
 
                     {/* Card */}
-                    <View style={styles.card}>
-                        <Text style={styles.title}>Iniciar sesión</Text>
+                    <View className="bg-white rounded-2xl p-6 mx-auto w-full max-w-sm shadow-lg">
+                        <Text className="text-2xl font-roboto-bold text-center text-[#111827] mb-6">Iniciar sesión</Text>
 
                         {/* Correo */}
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Correo electrónico</Text>
+                        <View className="mb-4">
+                            <Text className="mb-1 font-opensans-regular text-sm font-bold text-[#4b5563]">Correo electrónico</Text>
                             <TextInput
                                 placeholder="Ej: usuario@email.com"
                                 placeholderTextColor="#999"
-                                style={styles.input}
+                                className="rounded-lg border border-[#eef1f5] bg-[#fafbfc] px-4 py-3 font-opensans-regular text-sm text-[#111827]"
                                 keyboardType="email-address"
                                 autoCapitalize="none"
                                 onChangeText={setCorreo}
@@ -75,13 +75,13 @@ const LoginScreen: React.FC = () => {
                         </View>
 
                         {/* Contraseña */}
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Contraseña</Text>
-                            <View style={styles.passwordWrapper}>
+                        <View className="mb-6">
+                            <Text className="mb-1 font-opensans-regular text-sm font-bold text-[#4b5563]">Contraseña</Text>
+                            <View className="flex-row items-center rounded-lg border border-[#eef1f5] bg-[#fafbfc] px-4 py-3">
                                 <TextInput
                                     placeholder="Ingresa tu contraseña"
                                     placeholderTextColor="#999"
-                                    style={styles.inputPassword}
+                                    className="flex-1 font-opensans-regular text-sm text-[#111827]"
                                     secureTextEntry={!showPassword}
                                     onChangeText={setPassword}
                                     value={password}
@@ -97,13 +97,13 @@ const LoginScreen: React.FC = () => {
                         </View>
 
                         {/* Botón */}
-                        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                            <Text style={styles.buttonText}>INICIAR SESIÓN</Text>
+                        <TouchableOpacity className="bg-primary rounded-lg py-3 items-center" onPress={handleLogin}>
+                            <Text className="text-white font-roboto-bold text-lg">INICIAR SESIÓN</Text>
                         </TouchableOpacity>
 
                         {/* Extra */}
-                        <TouchableOpacity style={styles.link}>
-                            <Text style={styles.linkText} onPress={() => router.push('/register')}>¿No tienes cuenta? Regístrate</Text>
+                        <TouchableOpacity className="mt-4 items-center">
+                            <Text className="text-[#007bff] font-opensans-regular text-sm" onPress={() => router.push('/register')}>¿No tienes cuenta? Regístrate</Text>
                         </TouchableOpacity>
 
                     </View>
