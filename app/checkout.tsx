@@ -8,15 +8,20 @@ import {
     ScrollView,
     Text,
     TextInput,
+    useWindowDimensions,
     View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import BarrNaveg from "../components/BarrNaveg";
+import BarraBusquedaMovil from "../components/BarraBusquedaMovil";
 import CustomButton from "../components/CustomButton";
 import Header from "../components/header";
 import { useCart } from "../context/CartContext";
 
 const CheckoutScreen = () => {
     const { cartItems, subtotal } = useCart();
+    const { width } = useWindowDimensions();
+    const esMobile = width < 768;
     const [metodoPago, setMetodoPago] = useState("Tarjeta");
 
     // Estados del formulario
@@ -62,10 +67,15 @@ const CheckoutScreen = () => {
 
     return (
         <SafeAreaView className="flex-1 bg-[#f6f7fb]">
-            {/* HEADER */}
-            <Header />
+            {esMobile ? (
+                <View style={{ backgroundColor: "#FED20F" }}>
+                    <BarraBusquedaMovil />
+                </View>
+            ) : (
+                <Header />
+            )}
 
-            <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 40 }}>
+            <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: esMobile ? 120 : 40 }}>
                 <View className="px-4 py-8">
                     <View className="mx-auto w-full max-w-4xl">
                         <Pressable className="mb-6 flex-row items-center gap-2" onPress={() => router.back()}>
@@ -288,6 +298,7 @@ const CheckoutScreen = () => {
                     </View>
                 </View>
             </ScrollView>
+            {esMobile ? <BarrNaveg /> : null}
         </SafeAreaView>
     );
 };
