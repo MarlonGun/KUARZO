@@ -1,20 +1,17 @@
 import CustomButton from '@/components/CustomButton';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
     Alert,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    SafeAreaView,
     ScrollView,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    useWindowDimensions,
 } from 'react-native';
 
 const RegisterScreen: React.FC = () => {
@@ -30,6 +27,9 @@ const RegisterScreen: React.FC = () => {
 
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showPassword2, setShowPassword2] = useState<boolean>(false);
+
+    const { width: windowWidth } = useWindowDimensions();
+    const isSmallScreen = windowWidth < 900;
 
     const handleRegister = (): void => {
         if (!primerNombre || !primerApellido || !correo || !password) {
@@ -51,170 +51,166 @@ const RegisterScreen: React.FC = () => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={{ flex: 1 }}
+        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+            <View 
+                style={{ 
+                    flexDirection: isSmallScreen ? 'column' : 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: isSmallScreen ? 20 : 60,
+                    width: '100%',
+                    maxWidth: 1100
+                }}
             >
-                <ScrollView contentContainerStyle={styles.container}>
-
-                    <View className="bg-white w-full max-w-6xl mx-auto">
-                        <Pressable className="flex-row items-center gap-2 self-start mt-6" onPress={() => router.back()}>
-                            <MaterialIcons name="arrow-back" size={20} color="#111827" />
-                            <Text className="font-roboto-bold text-sm text-[#111827]">
-                                Volver
-                            </Text>
-                        </Pressable>
-                    </View>
-
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                     <Image
                         source={require('@/assets/images/logo.png')}
-                        style={styles.logo}
+                        style={[styles.logo, isSmallScreen && { width: 180, height: 180 }]}
                     />
+                </View>
 
-                    <View style={styles.card}>
-                        <Text style={styles.title}>Crea tu cuenta</Text>
+                <View style={styles.card}>
+                    <Text style={styles.title}>Crea tu cuenta</Text>
 
-                        {/* Primer Nombre */}
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Primer nombre</Text>
-                            <TextInput
-                                placeholder="Ej: Juan"
-                                placeholderTextColor="#999"
-                                style={styles.input}
-                                onChangeText={setPrimerNombre}
-                            />
-                        </View>
-
-                        {/* Segundo Nombre */}
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Segundo nombre</Text>
-                            <TextInput
-                                placeholder="Ej: David"
-                                placeholderTextColor="#999"
-                                style={styles.input}
-                                onChangeText={setSegundoNombre}
-                            />
-                        </View>
-
-                        {/* Primer Apellido */}
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Primer apellido</Text>
-                            <TextInput
-                                placeholder="Ej: Pérez"
-                                placeholderTextColor="#999"
-                                style={styles.input}
-                                onChangeText={setPrimerApellido}
-                            />
-                        </View>
-
-                        {/* Segundo Apellido */}
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Segundo apellido</Text>
-                            <TextInput
-                                placeholder="Ej: Gómez"
-                                placeholderTextColor="#999"
-                                style={styles.input}
-                                onChangeText={setSegundoApellido}
-                            />
-                        </View>
-
-                        {/* Correo */}
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Correo electrónico</Text>
-                            <TextInput
-                                placeholder="Ej: usuario@email.com"
-                                placeholderTextColor="#999"
-                                style={styles.input}
-                                keyboardType="email-address"
-                                autoCapitalize="none"
-                                onChangeText={setCorreo}
-                            />
-                        </View>
-
-                        {/* Teléfono */}
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Teléfono</Text>
-                            <TextInput
-                                placeholder="Ej: 3001234567"
-                                placeholderTextColor="#999"
-                                style={styles.input}
-                                keyboardType="phone-pad"
-                                onChangeText={setTelefono}
-                            />
-                        </View>
-
-                        {/* Contraseña */}
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Contraseña</Text>
-                            <View style={styles.passwordWrapper}>
-                                <TextInput
-                                    placeholder="Mínimo 8 caracteres"
-                                    placeholderTextColor="#999"
-                                    style={styles.inputPassword}
-                                    secureTextEntry={!showPassword}
-                                    onChangeText={setPassword}
-                                    value={password}
-                                />
-                                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                                    <Ionicons
-                                        name={showPassword ? "eye-outline" : "eye-off-outline"}
-                                        size={22}
-                                        color="#666"
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-                        {/* Confirmar contraseña */}
-                        <View style={styles.inputGroup}>
-                            <Text style={styles.label}>Confirmar contraseña</Text>
-                            <View style={styles.passwordWrapper}>
-                                <TextInput
-                                    placeholder="Repite tu contraseña"
-                                    placeholderTextColor="#999"
-                                    style={styles.inputPassword}
-                                    secureTextEntry={!showPassword2}
-                                    onChangeText={setConfirmPassword}
-                                    value={confirmPassword}
-                                />
-                                <TouchableOpacity onPress={() => setShowPassword2(!showPassword2)}>
-                                    <Ionicons
-                                        name={showPassword2 ? "eye-outline" : "eye-off-outline"}
-                                        size={22}
-                                        color="#666"
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-                        {/* Validación */}
-                        <View style={styles.requirementRow}>
-                            <View style={[
-                                styles.circle,
-                                password.length >= 8 && { backgroundColor: '#4CAF50', borderColor: '#4CAF50' }
-                            ]} />
-                            <Text style={styles.requirementText}>Mínimo 8 caracteres</Text>
-                        </View>
-
-                        {/* Botón */}
-                        <CustomButton
-                            children='CREA TU CUENTA'
-                            className='bg-primary rounded-md font-roboto-bold w-full h-12 mt-6 justify-center items-center'
-                            onPress={handleRegister}
+                    {/* Primer Nombre */}
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Primer nombre</Text>
+                        <TextInput
+                            placeholder="Ej: Juan"
+                            placeholderTextColor="#999"
+                            style={styles.input}
+                            onChangeText={setPrimerNombre}
                         />
-                        <CustomButton
-                            onPress={() => router.push('/login')}
-                            variant="text-only"
-                            color="secondary"
-                        >
-                            ¿Ya tienes cuenta? Inicia sesión
-                        </CustomButton>
-
                     </View>
-                </ScrollView>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
+
+                    {/* Segundo Nombre */}
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Segundo nombre</Text>
+                        <TextInput
+                            placeholder="Ej: David"
+                            placeholderTextColor="#999"
+                            style={styles.input}
+                            onChangeText={setSegundoNombre}
+                        />
+                    </View>
+
+                    {/* Primer Apellido */}
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Primer apellido</Text>
+                        <TextInput
+                            placeholder="Ej: Pérez"
+                            placeholderTextColor="#999"
+                            style={styles.input}
+                            onChangeText={setPrimerApellido}
+                        />
+                    </View>
+
+                    {/* Segundo Apellido */}
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Segundo apellido</Text>
+                        <TextInput
+                            placeholder="Ej: Gómez"
+                            placeholderTextColor="#999"
+                            style={styles.input}
+                            onChangeText={setSegundoApellido}
+                        />
+                    </View>
+
+                    {/* Correo */}
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Correo electrónico</Text>
+                        <TextInput
+                            placeholder="Ej: usuario@email.com"
+                            placeholderTextColor="#999"
+                            style={styles.input}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            onChangeText={setCorreo}
+                        />
+                    </View>
+
+                    {/* Teléfono */}
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Teléfono</Text>
+                        <TextInput
+                            placeholder="Ej: 3001234567"
+                            placeholderTextColor="#999"
+                            style={styles.input}
+                            keyboardType="phone-pad"
+                            onChangeText={setTelefono}
+                        />
+                    </View>
+
+                    {/* Contraseña */}
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Contraseña</Text>
+                        <View style={styles.passwordWrapper}>
+                            <TextInput
+                                placeholder="Mínimo 8 caracteres"
+                                placeholderTextColor="#999"
+                                style={styles.inputPassword}
+                                secureTextEntry={!showPassword}
+                                onChangeText={setPassword}
+                                value={password}
+                            />
+                            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                                <Ionicons
+                                    name={showPassword ? "eye-outline" : "eye-off-outline"}
+                                    size={22}
+                                    color="#666"
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+                    {/* Confirmar contraseña */}
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Confirmar contraseña</Text>
+                        <View style={styles.passwordWrapper}>
+                            <TextInput
+                                placeholder="Repite tu contraseña"
+                                placeholderTextColor="#999"
+                                style={styles.inputPassword}
+                                secureTextEntry={!showPassword2}
+                                onChangeText={setConfirmPassword}
+                                value={confirmPassword}
+                            />
+                            <TouchableOpacity onPress={() => setShowPassword2(!showPassword2)}>
+                                <Ionicons
+                                    name={showPassword2 ? "eye-outline" : "eye-off-outline"}
+                                    size={22}
+                                    color="#666"
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+                    {/* Validación */}
+                    <View style={styles.requirementRow}>
+                        <View style={[
+                            styles.circle,
+                            password.length >= 8 && { backgroundColor: '#4CAF50', borderColor: '#4CAF50' }
+                        ]} />
+                        <Text style={styles.requirementText}>Mínimo 8 caracteres</Text>
+                    </View>
+
+                    {/* Botón */}
+                    <CustomButton
+                        children='CREA TU CUENTA'
+                        className='bg-primary rounded-md font-roboto-bold w-full h-12 mt-6 justify-center items-center'
+                        onPress={handleRegister}
+                    />
+                    <CustomButton
+                        onPress={() => router.push('/login')}
+                        variant="text-only"
+                        color="secondary"
+                    >
+                        ¿Ya tienes cuenta? Inicia sesión
+                    </CustomButton>
+
+                </View>
+            </View>
+        </ScrollView>
     );
 };
 

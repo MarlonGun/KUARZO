@@ -1,18 +1,17 @@
 import CustomButton from '@/components/CustomButton';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
     Alert,
-    Pressable,
-    SafeAreaView,
     ScrollView,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    useWindowDimensions,
 } from 'react-native';
 
 const LoginWeb: React.FC = () => {
@@ -20,6 +19,9 @@ const LoginWeb: React.FC = () => {
     const [correo, setCorreo] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
+
+    const { width: windowWidth } = useWindowDimensions();
+    const isSmallScreen = windowWidth < 800;
 
     const handleLogin = (): void => {
         if (!correo || !password) {
@@ -31,80 +33,78 @@ const LoginWeb: React.FC = () => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
-            <ScrollView contentContainerStyle={styles.container}>
-                <View className="bg-white w-full max-w-6xl mx-auto flex-row items-center justify-between">
-                    {/* Left Side: Logo or Image */}
-                    <View className="flex-1 items-center justify-center">
-                        <Image
-                            source={require('@/assets/images/logo.png')}
-                            style={styles.logo}
+        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+
+            <View 
+                style={{ 
+                    flexDirection: isSmallScreen ? 'column' : 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: isSmallScreen ? 20 : 60,
+                    width: '100%',
+                    maxWidth: 1100
+                }}
+            >
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <Image
+                        source={require('@/assets/images/logo.png')}
+                        style={[styles.logo, isSmallScreen && { width: 200, height: 200 }]}
+                    />
+                </View>
+
+                {/* Right Side: Form */}
+                <View style={styles.card}>
+                    <Text style={styles.title}>Iniciar sesión en la Web</Text>
+
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Correo electrónico</Text>
+                        <TextInput
+                            placeholder="Ej: usuario@email.com"
+                            placeholderTextColor="#999"
+                            style={styles.input}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            onChangeText={setCorreo}
                         />
                     </View>
 
-                    {/* Right Side: Form */}
-                    <View className="flex-1 items-center">
-                        <Pressable className="flex-row items-center gap-2 self-start mb-6" onPress={() => router.back()}>
-                            <MaterialIcons name="arrow-back" size={20} color="#111827" />
-                            <Text className="font-roboto-bold text-sm text-[#111827]">
-                                Volver
-                            </Text>
-                        </Pressable>
-
-                        <View style={styles.card}>
-                            <Text style={styles.title}>Iniciar sesión en la Web</Text>
-
-                            <View style={styles.inputGroup}>
-                                <Text style={styles.label}>Correo electrónico</Text>
-                                <TextInput
-                                    placeholder="Ej: usuario@email.com"
-                                    placeholderTextColor="#999"
-                                    style={styles.input}
-                                    keyboardType="email-address"
-                                    autoCapitalize="none"
-                                    onChangeText={setCorreo}
-                                />
-                            </View>
-
-                            <View style={styles.inputGroup}>
-                                <Text style={styles.label}>Contraseña</Text>
-                                <View style={styles.passwordWrapper}>
-                                    <TextInput
-                                        placeholder="Ingresa tu contraseña"
-                                        placeholderTextColor="#999"
-                                        style={styles.inputPassword}
-                                        secureTextEntry={!showPassword}
-                                        onChangeText={setPassword}
-                                        value={password}
-                                    />
-                                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                                        <Ionicons
-                                            name={showPassword ? "eye-outline" : "eye-off-outline"}
-                                            size={22}
-                                            color="#666"
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-
-                            <CustomButton
-                                children='INICIAR SESIÓN'
-                                className='bg-primary rounded-md font-roboto-bold w-full h-12 mt-6 justify-center items-center'
-                                onPress={handleLogin}
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Contraseña</Text>
+                        <View style={styles.passwordWrapper}>
+                            <TextInput
+                                placeholder="Ingresa tu contraseña"
+                                placeholderTextColor="#999"
+                                style={styles.inputPassword}
+                                secureTextEntry={!showPassword}
+                                onChangeText={setPassword}
+                                value={password}
                             />
-
-                            <CustomButton
-                                onPress={() => router.push('/register')}
-                                variant="text-only"
-                                color="secondary"
-                            >
-                                ¿No tienes cuenta? Regístrate
-                            </CustomButton>
+                            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                                <Ionicons
+                                    name={showPassword ? "eye-outline" : "eye-off-outline"}
+                                    size={22}
+                                    color="#666"
+                                />
+                            </TouchableOpacity>
                         </View>
                     </View>
+
+                    <CustomButton
+                        children='INICIAR SESIÓN'
+                        className='bg-primary rounded-md font-roboto-bold w-full h-12 mt-6 justify-center items-center'
+                        onPress={handleLogin}
+                    />
+
+                    <CustomButton
+                        onPress={() => router.push('/register')}
+                        variant="text-only"
+                        color="secondary"
+                    >
+                        ¿No tienes cuenta? Regístrate
+                    </CustomButton>
                 </View>
-            </ScrollView>
-        </SafeAreaView>
+            </View>
+        </ScrollView >
     );
 };
 

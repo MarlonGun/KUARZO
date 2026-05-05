@@ -1,3 +1,4 @@
+import { useCartStore } from '@/src/store/useCartStore';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -9,7 +10,6 @@ import {
   useWindowDimensions,
   View
 } from 'react-native';
-import { useCartStore } from '@/src/store/useCartStore';
 
 export type ProductData = {
   id?: string | number;
@@ -53,23 +53,36 @@ export default function Carrusel({
   const { width: screenWidth } = useWindowDimensions();
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
-  const autoPlayInterval = 3500;
+  const productsRef = useRef<ScrollView>(null);
+  const autoPlayInterval = 2500;
+  const itemWidth = 280;
+  const itemMargin = 16;
+  const snapInterval = itemWidth + itemMargin;
   const { addItem } = useCartStore();
 
-  // Autoplay para el modo slide de imágenes (Banners promocionales)
+  // Autoplay para ambos modos (Imágenes y Productos)
   useEffect(() => {
-    if (type !== 'images' || !autoPlay || images.length <= 1) return;
+    if (!autoPlay) return;
 
     const intervalId = setInterval(() => {
-      setActiveIndex((prev) => {
-        const nextIndex = prev + 1 >= images.length ? 0 : prev + 1;
-        flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
-        return nextIndex;
-      });
+      if (type === 'images' && images.length > 1) {
+        setActiveIndex((prev) => {
+          const nextIndex = prev + 1 >= images.length ? 0 : prev + 1;
+          flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+          return nextIndex;
+        });
+      } else if (type === 'products' && products.length > 1) {
+        setActiveIndex((prev) => {
+          const nextIndex = prev + 1 >= products.length ? 0 : prev + 1;
+          const offset = nextIndex * snapInterval;
+          productsRef.current?.scrollTo({ x: offset, animated: true });
+          return nextIndex;
+        });
+      }
     }, autoPlayInterval);
 
     return () => clearInterval(intervalId);
-  }, [type, autoPlay, images.length]);
+  }, [type, autoPlay, images.length, products.length, snapInterval]);
 
   const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const x = event.nativeEvent.contentOffset.x;
@@ -123,7 +136,7 @@ export default function Carrusel({
             >
               <Image
                 source={{ uri: item }}
-                className="w-full h-[500px] bg-gray-200"
+                className="w-full h-[650px] bg-transparent"
                 resizeMode="cover"
               />
             </TouchableOpacity>
@@ -156,19 +169,22 @@ export default function Carrusel({
   return (
     <View className="pb-8">
       <ScrollView
+        ref={productsRef}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 20 }}
-        snapToInterval={280 + 16} // ancho de tarjeta (280) + margen derecho (16)
+        snapToInterval={snapInterval}
         decelerationRate="fast"
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
         {products.map((item) => (
           <TouchableOpacity
             key={item.id || item.cod || Math.random().toString()}
             activeOpacity={0.9}
             onPress={() => onProductPress && onProductPress(item)}
-            className="bg-white mr-4"
-            style={{ width: 280, elevation: 3 }}
+            className="bg-white"
+            style={{ width: itemWidth, marginRight: itemMargin, elevation: 3 }}
           >
             <View className="overflow-hidden flex-1 bg-transparent">
               <Image
@@ -189,7 +205,7 @@ export default function Carrusel({
 
               <View className="flex-row">
                 <TouchableOpacity
-                  className="bg-[#FED20F] px-3 py-3 flex-1 justify-center items-center rounded-md w-1/2 h-10"
+                  className="bg-[#FED20F] px-3 py-3 flex-1 justify-center items-center rounded-sm w-1/2 h-auto"
                   onPress={() => addItem({
                     id: String(item.id || item.cod || item.nombre),
                     nombre: item.nombre,
@@ -198,7 +214,7 @@ export default function Carrusel({
                     cantidad: 1
                   })}
                 >
-                  <Text className="text-xl font-roboto-bold text-quaternary-950 ">Comprar</Text>
+                  <Text className="text-lg font-roboto-medium text-quaternary-950 ">Comprar</Text>
                 </TouchableOpacity>
                 <View className="bg-transparent px-3 py-3 flex-1 justify-center items-center">
                   <Text className="text-quaternary-950 font-roboto-bold text-xl">

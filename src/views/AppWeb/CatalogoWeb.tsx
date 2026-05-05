@@ -128,7 +128,7 @@ const PRODUCT_GRID_SPACING = {
   itemVerticalMargin: 32,
   desktopWidth: "18.3%",
   mobileWidth: "47%",
-};
+} as const;
 
 const CatalogoScreen = () => {
   const { width } = useWindowDimensions();
@@ -136,8 +136,18 @@ const CatalogoScreen = () => {
   const [grupoActivo, setGrupoActivo] = useState("TODOS");
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
 
-  const esDesktop = width >= 980;
-  const grillaCompacta = width >= 1220;
+  const isLargeDesktop = width >= 1200;
+  const isDesktop = width >= 980;
+  const isTablet = width >= 600 && width < 980;
+  const isMobile = width < 600;
+
+  const getProductWidth = () => {
+    if (width >= 1200) return "18.3%"; // 5 columnas
+    if (width >= 900) return "23%";    // 4 columnas
+    if (width >= 600) return "31%";    // 3 columnas
+    return "47%";                     // 2 columnas
+  };
+
   const seccionActiva =
     secciones.find((seccion) => seccion.titulo === grupoActivo) ?? secciones[0];
   const productosFiltrados = productos.filter((producto) => {
@@ -159,15 +169,14 @@ const CatalogoScreen = () => {
           </Pressable>
         </View>
 
-        {/* CATÁLOGO */}
-        <View className="bg-white px-4 py-8">
-          <View className="w-full bg-white px-5 py-5">
-            <View className={esDesktop ? "flex-row" : "flex-col"}>
+        <View className="bg-white px-0 py-8">
+          <View className="w-full bg-white px-2 py-5">
+            <View className={isDesktop ? "flex-row" : "flex-col"}>
               <View
                 className={
-                  esDesktop
+                  isDesktop
                     ? "w-52 border-r border-[#eef1f5] pr-5"
-                    : "border-b border-[#eef1f5] pb-5"
+                    : "border-b border-[#eef1f5] pb-5 mb-5"
                 }
               >
                 <View className="mb-8 flex-row items-center gap-3">
@@ -176,10 +185,7 @@ const CatalogoScreen = () => {
                   </View>
                   <View>
                     <Text className="font-roboto-bold text-lg text-quaternary-950">
-                      KUARZO
-                    </Text>
-                    <Text className="font-opensans-regular text-xs uppercase text-[#000000]">
-                      Catalogo
+                      CATALOGO
                     </Text>
                   </View>
                 </View>
@@ -229,10 +235,10 @@ const CatalogoScreen = () => {
                   </View>
                 ))}
               </View>
-
-              <View className={esDesktop ? "flex-1 pl-6" : "pt-5"}>
+              {/*   CONTENIDO PRINCIPAL  */}
+              <View className={isDesktop ? "flex-1 pl-6" : "pt-0"}>
                 <View
-                  className={`mb-6 items-center justify-between gap-4 ${esDesktop ? "flex-row" : "flex-col"}`}
+                  className={`mb-6 items-center justify-between gap-4 ${isDesktop ? "flex-row" : "flex-col"}`}
                 >
 
                   <View className="flex-row items-center gap-3">
@@ -265,7 +271,7 @@ const CatalogoScreen = () => {
                       <View
                         key={producto.id}
                         style={{
-                          width: esDesktop ? PRODUCT_GRID_SPACING.desktopWidth : PRODUCT_GRID_SPACING.mobileWidth,
+                          width: getProductWidth(),
                           paddingHorizontal: PRODUCT_GRID_SPACING.itemHorizontalPadding,
                           marginBottom: PRODUCT_GRID_SPACING.itemVerticalMargin,
                         }}

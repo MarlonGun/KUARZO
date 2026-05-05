@@ -1,24 +1,19 @@
 import { usePlatform } from '@/hooks/usePlatform';
+import { useCartStore } from '@/src/store/useCartStore';
 import { router } from "expo-router";
 import React from 'react';
 import { Image, Pressable, Text, useWindowDimensions, View } from "react-native";
-import { useCart } from '../context/CartContext';
-
-export const CardProduct = ({ producto }: { producto: any }) => {
-    const { addItem } = useCart();
-    const platform = usePlatform();
-    const { width } = useWindowDimensions();
-    const isMobile = platform === 'movil' || width < 760;
-import { Image, Pressable, Text, View } from "react-native";
-import { useCartStore } from '@/src/store/useCartStore';
 
 export const CardProduct = ({ producto }: { producto: any }) => {
     const { addItem } = useCartStore();
+    const platform = usePlatform();
+    const { width } = useWindowDimensions();
+    const isMobile = platform === 'movil' || width < 760;
 
     const { id, nombre, descripcion, precio, imagen, categoria } = producto;
 
     return (
-        <View className="w-full overflow-hidden rounded-3xl border border-[#e5e7eb] bg-white shadow-sm">
+        <View className="w-full overflow-hidden bg-transparent">
             <Pressable onPress={() => router.push({ pathname: '/detalleProd', params: { id: id || nombre, nombre, descripcion, precio, imagen, categoria } })}>
                 {/* Sección superior con fondo gris */}
                 <View className="bg-transparent w-full h-44 flex justify-center items-center">
@@ -44,7 +39,7 @@ export const CardProduct = ({ producto }: { producto: any }) => {
             <View className={`${isMobile ? 'flex-col gap-3 w-full' : 'flex-row items-stretch'} mt-4`}>
 
                 <Pressable
-                    className={`${isMobile ? 'w-full py-4 px-4' : 'flex-1 py-3'} bg-primary justify-center items-center rounded-md`}
+                    className={`${isMobile ? 'w-full py-4 px-4' : 'flex-1 py-3'} bg-primary justify-center items-center rounded-sm`}
                     style={isMobile ? { minWidth: 0, width: '100%' } : undefined}
                     onPress={() => addItem({
                         id: nombre,
@@ -56,7 +51,7 @@ export const CardProduct = ({ producto }: { producto: any }) => {
 
                 >
                     <Text
-                        className={`${isMobile ? 'text-sm' : 'text-base'} font-roboto-medium text-black uppercase text-center leading-5`}
+                        className={`${isMobile ? 'text-lg' : 'text-lg'} font-roboto-medium text-black text-center leading-5`}
                     >
                         Comprar
                     </Text>
@@ -78,3 +73,4 @@ export const CardProduct = ({ producto }: { producto: any }) => {
         </View>
     );
 };
+
