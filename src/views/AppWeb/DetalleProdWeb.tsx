@@ -26,10 +26,29 @@ const DetalleProdWeb = () => {
         ? String(descripcion)
         : 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci.';
     const productPrecio = precio ? Number(precio) : 45000;
-    const mainImage = imagen
-        ? String(imagen)
-        : 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=1200&q=80';
+    // Resolve image source (handle local require numbers and remote URIs)
+    const mainImage = useMemo(() => {
+        if (!imagen) return 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=1200&q=80';
+        const num = Number(imagen);
+        return isNaN(num) ? String(imagen) : num;
+    }, [imagen]);
+
     const productCategoria = categoria ? String(categoria) : 'Pulsera';
+
+    // Helper for image source - More robust for Web/Expo
+    const getImageSource = (img: any) => {
+        if (!img) return { uri: 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=1200&q=80' };
+        
+        // If it's a number (resource ID), return it as is
+        if (typeof img === 'number') return img;
+        
+        // If it's a string that represents a number (Expo resource ID from params)
+        const num = Number(img);
+        if (!isNaN(num) && String(img).trim() !== "") return num;
+        
+        // Otherwise treat as a URI string
+        return { uri: String(img) };
+    };
 
     const localProductImages = useMemo(() => [
         mainImage,
@@ -80,12 +99,12 @@ const DetalleProdWeb = () => {
                     <View style={{ width: isSmallScreen ? '100%' : 420 }}>
                         {/* Imagen principal */}
                         <View style={{ borderWidth: 1, borderColor: '#9ca3af', backgroundColor: '#fff', padding: 16 }}>
-                            <Image
-                                source={{ uri: selectedImage }}
-                                style={{ height: 320, width: '100%' }}
-                                resizeMode="contain"
-                            />
-                        </View>
+                                <Image
+                                    source={getImageSource(selectedImage)}
+                                    style={{ height: 320, width: '100%' }}
+                                    resizeMode="contain"
+                                />
+                            </View>
 
                         {/* Miniaturas */}
                         <View style={{ flexDirection: 'row', gap: 8, marginTop: 12 }}>
@@ -103,7 +122,7 @@ const DetalleProdWeb = () => {
                                         }}
                                     >
                                         <Image
-                                            source={{ uri: image }}
+                                            source={getImageSource(image)}
                                             style={{ height: 90, width: '100%' }}
                                             resizeMode="contain"
                                         />
@@ -189,7 +208,7 @@ const DetalleProdWeb = () => {
                                             }}
                                         >
                                             <Image
-                                                source={{ uri: option.image }}
+                                                source={getImageSource(option.image)}
                                                 style={{ height: '100%', width: '100%' }}
                                                 resizeMode="contain"
                                             />

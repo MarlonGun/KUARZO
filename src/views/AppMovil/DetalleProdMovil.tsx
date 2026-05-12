@@ -22,8 +22,29 @@ const DetalleProdMovil = () => {
     const productNombre = nombre ? String(nombre) : 'Pulsera volcanica';
     const productDescripcion = descripcion ? String(descripcion) : 'Pulseras realizadas en piedra volcanica natural.';
     const productPrecio = precio ? Number(precio) : 45000;
-    const mainImage = imagen ? String(imagen) : 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=1200&q=80';
+    // Resolve image source (handle local require numbers and remote URIs)
+    const mainImage = useMemo(() => {
+        if (!imagen) return 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=1200&q=80';
+        const num = Number(imagen);
+        return isNaN(num) ? String(imagen) : num;
+    }, [imagen]);
+
     const productCategoria = categoria ? String(categoria) : 'Pulsera';
+
+    // Helper for image source - More robust for Web/Expo
+    const getImageSource = (img: any) => {
+        if (!img) return { uri: 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=1200&q=80' };
+        
+        // If it's a number (resource ID), return it as is
+        if (typeof img === 'number') return img;
+        
+        // If it's a string that represents a number (Expo resource ID from params)
+        const num = Number(img);
+        if (!isNaN(num) && String(img).trim() !== "") return num;
+        
+        // Otherwise treat as a URI string
+        return { uri: String(img) };
+    };
 
     const localProductImages = useMemo(() => [
         mainImage,
@@ -62,7 +83,7 @@ const DetalleProdMovil = () => {
                         {/* Arriba */}
                         <View className="w-full">
                             <View className="border border-[#9ca3af] bg-transparent p-4">
-                                <Image source={{ uri: selectedImage }} className="h-[320px] w-full" resizeMode="contain" />
+                                <Image source={getImageSource(selectedImage)} className="h-[320px] w-full" resizeMode="contain" />
                             </View>
 
                             <View className="mt-2 flex-row gap-2">
@@ -74,7 +95,7 @@ const DetalleProdMovil = () => {
                                             onPress={() => setSelectedImage(image)}
                                             className={`flex-1 border p-2 ${active ? 'border-secondary' : 'border-[#9ca3af]'}`}
                                         >
-                                            <Image source={{ uri: image }} className="h-20 w-full" resizeMode="contain" />
+                                            <Image source={getImageSource(image)} className="h-20 w-full" resizeMode="contain" />
                                         </Pressable>
                                     );
                                 })}
@@ -116,7 +137,7 @@ const DetalleProdMovil = () => {
                                                 }}
                                                 className={`h-14 w-14 items-center justify-center border bg-white p-1 ${active ? 'border-secondary' : 'border-[#9ca3af]'}`}
                                             >
-                                                <Image source={{ uri: option.image }} className="h-full w-full" resizeMode="contain" />
+                                                <Image source={getImageSource(option.image)} className="h-full w-full" resizeMode="contain" />
                                             </Pressable>
                                         );
                                     })}

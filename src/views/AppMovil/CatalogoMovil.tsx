@@ -24,24 +24,98 @@ type Producto = {
 };
 
 const productos: Producto[] = [
+  /*Pulseras*/
   {
     id: "pulsera-volcanica",
     nombre: "Pulsera Volcánica",
     descripcion: "Pulsera hecha con piedras volcánicas",
     categoria: "Pulseras",
     precio: 45000,
-    imagen:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80",
+    imagen: "/assets/productos/Pulsera/PULSERA1.jpg",
   },
   {
-    id: "pulsera-premium",
+    id: "pulsera-premium-1",
     nombre: "Pulsera Premium",
     descripcion: "Pulsera hecha con piedras premium",
     categoria: "Pulseras",
     precio: 55000,
     imagen:
-      "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=900&q=80",
+      "/assets/productos/Pulsera/PULSERA2.jpg",
   },
+  {
+    id: "pulsera-premium-2",
+    nombre: "Pulsera Premium",
+    descripcion: "Pulsera hecha con piedras premium",
+    categoria: "Pulseras",
+    precio: 55000,
+    imagen:
+      "/assets/productos/Pulsera/PULSERA3.jpg",
+  },
+  {
+    id: "pulsera-premium-3",
+    nombre: "Pulsera Premium",
+    descripcion: "Pulsera hecha con piedras premium",
+    categoria: "Pulseras",
+    precio: 55000,
+    imagen:
+      "/assets/productos/Pulsera/PULSERA4.jpg",
+  },
+  {
+    id: "pulsera-premium-4",
+    nombre: "Pulsera Premium",
+    descripcion: "Pulsera hecha con piedras premium",
+    categoria: "Pulseras",
+    precio: 55000,
+    imagen:
+      "/assets/productos/Pulsera/PULSERA5.jpg",
+  },
+  {
+    id: "pulsera-premium-5",
+    nombre: "Pulsera Premium",
+    descripcion: "Pulsera hecha con piedras premium",
+    categoria: "Pulseras",
+    precio: 55000,
+    imagen:
+      "/assets/productos/Pulsera/PULSERA6.jpg",
+  },
+  {
+    id: "pulsera-premium-6",
+    nombre: "Pulsera Premium",
+    descripcion: "Pulsera hecha con piedras premium",
+    categoria: "Pulseras",
+    precio: 55000,
+    imagen:
+      "/assets/productos/Pulsera/PULSERA7.jpg",
+  },
+  {
+    id: "pulsera-premium-7",
+    nombre: "Pulsera Premium",
+    descripcion: "Pulsera hecha con piedras premium",
+    categoria: "Pulseras",
+    precio: 55000,
+    imagen:
+      "/assets/productos/Pulsera/PULSERA8.jpg",
+  },
+  {
+    id: "pulsera-premium-8",
+    nombre: "Pulsera Premium",
+    descripcion: "Pulsera hecha con piedras premium",
+    categoria: "Pulseras",
+    precio: 55000,
+    imagen:
+      "/assets/productos/Pulsera/PULSERA9.jpg",
+  },
+  {
+    id: "pulsera-premium-9",
+    nombre: "Pulsera Premium",
+    descripcion: "Pulsera hecha con piedras premium",
+    categoria: "Pulseras",
+    precio: 55000,
+    imagen:
+      "/assets/productos/Pulsera/PULSERA10.jpg",
+  },
+
+  /*Cadenas*/
   {
     id: "cadena-oro",
     nombre: "Cadena Oro Rosa",
@@ -60,6 +134,8 @@ const productos: Producto[] = [
     imagen:
       "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=900&q=80",
   },
+
+  /*Anillos*/
   {
     id: "anillo-esmeralda",
     nombre: "Anillo Esmeralda",
@@ -78,6 +154,8 @@ const productos: Producto[] = [
     imagen:
       "https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=900&q=80",
   },
+
+  /*Aretes*/
   {
     id: "aretes-perla",
     nombre: "Aretes Perla",
@@ -96,6 +174,8 @@ const productos: Producto[] = [
     imagen:
       "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=900&q=80",
   },
+
+  /*Tobilleras*/
   {
     id: "tobillera-luna",
     nombre: "Tobillera Luna",
@@ -142,6 +222,7 @@ const CatalogoScreen = () => {
   const esDesktop = width >= 980;
   const seccionActiva =
     secciones.find((seccion) => seccion.titulo === grupoActivo) ?? secciones[0];
+
   const productosFiltrados = productos.filter((producto) => {
     return categoriaActiva === "Todos" || producto.categoria === categoriaActiva;
   });
@@ -265,19 +346,22 @@ const CatalogoScreen = () => {
                 >
                   <View className="flex-row flex-wrap justify-between">
                     {productosFiltrados.map((producto) => {
-                      const widthStyle = esDesktop
+                      const itemWidth = esDesktop
                         ? PRODUCT_GRID_SPACING.desktopWidth
                         : isTabletWidth
-                        ? PRODUCT_GRID_SPACING.tabletWidth
-                        : PRODUCT_GRID_SPACING.mobileWidth;
+                          ? PRODUCT_GRID_SPACING.tabletWidth
+                          : PRODUCT_GRID_SPACING.mobileWidth;
+
+                      const itemPadding = (esDesktop || isTabletWidth)
+                        ? PRODUCT_GRID_SPACING.itemHorizontalPadding
+                        : 0;
 
                       return (
                         <View
                           key={producto.id}
-                          className={esDesktop ? "mb-8" : isTabletWidth ? "mb-8" : "mb-8 w-full"}
                           style={{
-                            width: widthStyle,
-                            paddingHorizontal: esDesktop || isTabletWidth ? PRODUCT_GRID_SPACING.itemHorizontalPadding : 0,
+                            width: itemWidth,
+                            paddingHorizontal: itemPadding,
                             marginBottom: PRODUCT_GRID_SPACING.itemVerticalMargin,
                           }}
                         >

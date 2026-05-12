@@ -15,12 +15,12 @@ export const CardProduct = ({ producto }: { producto: any }) => {
     return (
         <View className="w-full overflow-hidden bg-transparent">
             <Pressable onPress={() => router.push({ pathname: '/detalleProd', params: { id: id || nombre, nombre, descripcion, precio, imagen, categoria } })}>
-                {/* Sección superior con fondo gris */}
-                <View className="bg-transparent w-full h-44 flex justify-center items-center">
+                {/* Sección superior con contenedor de imagen fijo */}
+                <View className="bg-[#f9f9f9] w-full h-48 justify-center items-center overflow-hidden">
                     <Image
-                        source={{ uri: imagen }}
-                        className="w-full h-44"
-                        resizeMode="contain"
+                        source={{ uri: producto.imagen }}
+                        style={{ width: '100%', height: '100%' }}
+                        resizeMode="cover"
                     />
                 </View>
 
