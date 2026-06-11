@@ -1,6 +1,6 @@
 import CustomButton from "@/components/CustomButton";
 import { router } from "expo-router";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollView, Text, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -10,6 +10,17 @@ import { CardProduct } from "@/components/CardProduct";
 import Carrusel from "@/components/Carrusel";
 import { promoBanners, sampleProducts, sampleProducts2 } from "@/src/data/mockData";
 import { useCartStore } from "@/src/store/useCartStore";
+import api from "@/src/services/api";
+import { resolveProductImage } from "@/src/utils/imageHelper";
+
+const shuffleArray = <T extends unknown>(array: T[]): T[] => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
 
 const goToDetail = (item: any) =>
   router.push({
@@ -29,6 +40,58 @@ const HomeWeb = () => {
   const { width: windowWidth } = useWindowDimensions();
   const isSmallScreen = windowWidth < 900;
 
+  const [banners, setBanners] = useState<string[]>(() => 
+    shuffleArray(promoBanners.map((b) => b.imagen))
+  );
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>(() => 
+    shuffleArray(sampleProducts)
+  );
+  const [extraProducts, setExtraProducts] = useState<any[]>(() => 
+    shuffleArray(sampleProducts2)
+  );
+
+  useEffect(() => {
+    const fetchProductos = async () => {
+      try {
+        const response = await api.get("/productos");
+        if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+          const mapped = response.data.map((p: any) => ({
+            id: String(p.id),
+            nombre: p.nombre,
+            descripcion: p.descripcion || "",
+            categoria: p.categoriaNombre || (p.categoria && typeof p.categoria === "object" ? p.categoria.nombre : (p.categoria || "General")),
+            precio: Number(p.precio),
+            imagen: resolveProductImage(p),
+          }));
+
+          const shuffled = shuffleArray(mapped);
+
+          // 1. Carrusel de Banners (arriba): tomamos hasta 3 imágenes de productos aleatorios
+          const bannerImages = shuffled.slice(0, 3).map((p) => p.imagen);
+          if (bannerImages.length > 0) {
+            setBanners(bannerImages);
+          }
+
+          // 2. Productos Destacados: tomamos hasta 8 productos aleatorios
+          const featured = shuffled.slice(0, Math.min(8, shuffled.length));
+          setFeaturedProducts(featured);
+
+          // 3. Más Productos (los 2 destacados al lado del cuadro negro)
+          let extra: any[] = [];
+          if (shuffled.length >= 2) {
+            extra = [shuffled[shuffled.length - 1], shuffled[shuffled.length - 2]];
+          } else if (shuffled.length === 1) {
+            extra = [shuffled[0], shuffled[0]];
+          }
+          setExtraProducts(extra);
+        }
+      } catch (error) {
+        console.error("Error al cargar productos en HomeWeb desde la API:", error);
+      }
+    };
+    fetchProductos();
+  }, []);
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className="flex-1 bg-white" showsVerticalScrollIndicator={false}>
@@ -39,7 +102,7 @@ const HomeWeb = () => {
         <View>
           <Carrusel
             type="images"
-            images={promoBanners.map((b) => b.imagen)}
+            images={banners}
             showDots={true}
             autoPlay={true}
           />
@@ -57,7 +120,7 @@ const HomeWeb = () => {
           <View style={{ marginBottom: 80 }}>
             <Carrusel
               type="products"
-              products={sampleProducts}
+              products={featuredProducts}
               onProductPress={goToDetail}
             />
           </View>
@@ -81,12 +144,16 @@ const HomeWeb = () => {
                 width: isSmallScreen ? '100%' : (Math.min(windowWidth, 1350) - 40) * 0.5,
                 paddingHorizontal: isSmallScreen ? 20 : 0
             }}>
-                <View style={{ flex: 1 }}>
-                    <CardProduct producto={sampleProducts2[0]} />
-                </View>
-                <View style={{ flex: 1 }}>
-                    <CardProduct producto={sampleProducts2[1]} />
-                </View>
+                {extraProducts[0] && (
+                  <View style={{ flex: 1 }}>
+                      <CardProduct producto={extraProducts[0]} />
+                  </View>
+                )}
+                {extraProducts[1] && (
+                  <View style={{ flex: 1 }}>
+                      <CardProduct producto={extraProducts[1]} />
+                  </View>
+                )}
             </View>
 
             {/* Cuadro Negro a la derecha */}
