@@ -9,13 +9,7 @@ import Constants from 'expo-constants';
  * - En celular físico o simuladores, obtiene la IP local de la computadora de desarrollo de forma automática.
  */
 const getBaseUrl = (): string => {
-  if (Platform.OS === 'web') {
-    return 'http://localhost:3000/api';
-  }
-
-  const hostUri = Constants.expoConfig?.hostUri;
-  const ip = hostUri ? hostUri.split(':')[0] : 'localhost';
-  return `http://${ip}:3000/api`;
+  return 'https://kuarzo-backend-production.up.railway.app/api';
 };
 
 const api = axios.create({

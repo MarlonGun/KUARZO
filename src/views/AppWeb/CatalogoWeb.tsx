@@ -2,9 +2,11 @@ import AppFooter from "@/components/AppFooter";
 import AppHeader from "@/components/AppHeader";
 import { CardProduct } from "@/components/CardProduct";
 import { usePlatform } from "@/hooks/usePlatform";
+import api from "@/src/services/api";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { resolveProductImage } from "@/src/utils/imageHelper";
 import {
   Pressable,
   ScrollView,
@@ -23,7 +25,7 @@ type Producto = {
   imagen: string;
 };
 
-const productos: Producto[] = [
+const staticProductos: Producto[] = [
   /*Pulseras*/
   {
     id: "pulsera-volcanica",
@@ -510,6 +512,31 @@ const CatalogoScreen = () => {
   const platform = usePlatform();
   const [grupoActivo, setGrupoActivo] = useState("TODOS");
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
+  const [productosList, setProductosList] = useState<Producto[]>(staticProductos);
+
+  useEffect(() => {
+    const fetchProductos = async () => {
+      try {
+        const response = await api.get("/productos");
+        if (response.data && Array.isArray(response.data)) {
+          const mapped = response.data.map((p: any) => ({
+            id: String(p.id),
+            nombre: p.nombre,
+            descripcion: p.descripcion || "",
+            categoria: p.categoriaNombre || (p.categoria && typeof p.categoria === "object" ? p.categoria.nombre : (p.categoria || "General")),
+            precio: Number(p.precio),
+            imagen: resolveProductImage(p),
+          }));
+          if (mapped.length > 0) {
+            setProductosList(mapped);
+          }
+        }
+      } catch (error) {
+        console.error("Error al cargar productos desde la API:", error);
+      }
+    };
+    fetchProductos();
+  }, []);
 
   const isLargeDesktop = width >= 1200;
   const isDesktop = width >= 980;
@@ -526,7 +553,7 @@ const CatalogoScreen = () => {
   const seccionActiva =
     secciones.find((seccion) => seccion.titulo === grupoActivo) ?? secciones[0];
 
-  const productosFiltrados = productos.filter((producto) => {
+  const productosFiltrados = productosList.filter((producto) => {
     return (
       categoriaActiva === "Todos" ||
       producto.categoria === categoriaActiva

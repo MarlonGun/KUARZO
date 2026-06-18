@@ -1,9 +1,11 @@
 import { CardProduct } from "@/components/CardProduct";
 import { MaterialIcons } from "@expo/vector-icons";
 import BarrNaveg from "@/components/BarrNaveg";
+import api from "@/src/services/api";
 import { useAuthStore } from "@/src/store/useAuthStore";
 import { router } from "expo-router";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { resolveProductImage } from "@/src/utils/imageHelper";
 import {
   Animated,
   Pressable,
@@ -22,7 +24,7 @@ type Producto = {
   imagen: string;
 };
 
-const productos: Producto[] = [
+const staticProductos: Producto[] = [
   /*Pulseras*/
   {
     id: "pulsera-volcanica",
@@ -438,13 +440,38 @@ const categorias = ["Todos", "Pulseras", "Cadenas", "Anillos", "Aretes", "Tobill
 
 const CatalogoMovil = () => {
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
+  const [productosList, setProductosList] = useState<Producto[]>(staticProductos);
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const user = useAuthStore((state: any) => state.user);
   const isAuthenticated = useAuthStore((state: any) => state.isAuthenticated);
   const logout = useAuthStore((state: any) => state.logout);
 
-  const productosFiltrados = productos.filter((producto) => {
+  useEffect(() => {
+    const fetchProductos = async () => {
+      try {
+        const response = await api.get("/productos");
+        if (response.data && Array.isArray(response.data)) {
+          const mapped = response.data.map((p: any) => ({
+            id: String(p.id),
+            nombre: p.nombre,
+            descripcion: p.descripcion || "",
+            categoria: p.categoriaNombre || (p.categoria && typeof p.categoria === "object" ? p.categoria.nombre : (p.categoria || "General")),
+            precio: Number(p.precio),
+            imagen: resolveProductImage(p),
+          }));
+          if (mapped.length > 0) {
+            setProductosList(mapped);
+          }
+        }
+      } catch (error) {
+        console.error("Error al cargar productos desde la API en móvil:", error);
+      }
+    };
+    fetchProductos();
+  }, []);
+
+  const productosFiltrados = productosList.filter((producto) => {
     return categoriaActiva === "Todos" || producto.categoria === categoriaActiva;
   });
 
