@@ -1,0 +1,12 @@
+[build]
+  command = "npx expo export --platform web"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Redirige todas las rutas al index.html (necesario para SPA con Expo Router)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
