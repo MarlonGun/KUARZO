@@ -41,3 +41,11 @@ app-example
 # generated native folders
 /ios
 /android
+
+# PyInstaller output (desktop_app)
+desktop_app/dist/
+desktop_app/build/
+desktop_app/__pycache__/
+
+# Env files del desktop
+desktop_app/.env

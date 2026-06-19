@@ -1,50 +1,33 @@
 import requests
-import socket
-import urllib3
 from config import API_BASE_URL, API_TIMEOUT
 
-# Disable insecure request warning since we connect via IP and bypass SSL hostname verification
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class ApiClient:
     def __init__(self):
         self.base_url = API_BASE_URL
         self.token = None
         self.user_info = None
-        self.hostname = "kuarzo-backend-production.up.railway.app"
-        self.ip = None
-        self.resolve_ip()
-
-    def resolve_ip(self):
-        """Resolves the Railway hostname to IP dynamically, or falls back to a known edge IP."""
-        try:
-            self.ip = socket.gethostbyname(self.hostname)
-        except Exception:
-            self.ip = "69.46.46.54"
 
     def _request(self, method, endpoint, json=None, headers=None):
-        """Performs a network request directly to the IP address using the Host header."""
-        if not self.ip:
-            self.resolve_ip()
-            
-        url = f"https://{self.ip}/api{endpoint}"
-        
+        """Performs a network request to the Railway backend using the configured base URL."""
+        url = f"{self.base_url}{endpoint}"
+
         req_headers = {
-            "Host": self.hostname,
             "Content-Type": "application/json"
         }
         if self.token:
             req_headers["Authorization"] = f"Bearer {self.token}"
         if headers:
             req_headers.update(headers)
-            
-        # We perform the request with verify=False since the SSL certificate is for the hostname, not the IP.
-        return requests.request(method, url, json=json, headers=req_headers, verify=False, timeout=API_TIMEOUT)
+
+        return requests.request(method, url, json=json, headers=req_headers, timeout=API_TIMEOUT)
 
     def is_alive(self):
         """Checks if the API is reachable."""
         try:
-            r = self._request("GET", "")
+            # La raiz devuelve 200 con el mensaje de bienvenida
+            url = self.base_url.replace("/api", "")
+            r = requests.get(url, timeout=API_TIMEOUT)
             return r.status_code == 200
         except Exception:
             return False
