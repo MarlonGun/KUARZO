@@ -259,7 +259,7 @@ const DetalleProdWeb = () => {
                                         }}
                                         onPress={() => {
                                             addItem({
-                                                id: id ? String(id) : productNombre,
+                                                id: String(id),
                                                 nombre: productNombre,
                                                 precio: productPrecio,
                                                 imagen: selectedImage,

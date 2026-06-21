@@ -1,7 +1,7 @@
-; ================================================================
-; KuarzoAdmin.spec — Configuración de PyInstaller para el Panel Admin
-; Generado para uso con: pyinstaller KuarzoAdmin.spec
-; ================================================================
+# ================================================================
+# KuarzoAdmin.spec — Configuración de PyInstaller para el Panel Admin
+# Ejecutar con: pyinstaller KuarzoAdmin.spec
+# ================================================================
 
 block_cipher = None
 
@@ -10,7 +10,7 @@ a = Analysis(
     pathex=['.'],
     binaries=[],
     datas=[
-        ; Incluir todos los assets necesarios
+        # Incluir todos los assets necesarios
         ('../assets/images/logo.png', 'assets/images'),
         ('../assets/images/favicon.png', 'assets/images'),
         ('../assets/fonts', 'assets/fonts'),
@@ -50,11 +50,10 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,       ; False = no muestra ventana de consola al abrir
+    console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    ; icon='../assets/images/icon.ico',  ; Descomenta si tienes el icono en .ico
 )
