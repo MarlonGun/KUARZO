@@ -82,7 +82,7 @@ class ApiClient:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def add_product(self, name, description, price, category_name, stock, image_url=None):
+    def add_product(self, name, description, price, category_name, stock, image_url=None, destacado=False):
         """Endpoint: POST /api/productos"""
         category_id = {
             "Pulseras": 1,
@@ -96,7 +96,8 @@ class ApiClient:
             "descripcion": description,
             "precio": float(price),
             "stock": int(stock),
-            "categoriaId": category_id
+            "categoriaId": category_id,
+            "destacado": bool(destacado)
         }
         if image_url:
             payload["imagen"] = image_url
@@ -115,7 +116,7 @@ class ApiClient:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def edit_product(self, prod_id, name, description, price, category_name, stock, image_url=None):
+    def edit_product(self, prod_id, name, description, price, category_name, stock, image_url=None, destacado=False):
         """Endpoint: PUT /api/productos/:id"""
         category_id = {
             "Pulseras": 1,
@@ -129,7 +130,8 @@ class ApiClient:
             "descripcion": description,
             "precio": float(price),
             "stock": int(stock),
-            "categoriaId": category_id
+            "categoriaId": category_id,
+            "destacado": bool(destacado)
         }
         if image_url:
             payload["imagen"] = image_url

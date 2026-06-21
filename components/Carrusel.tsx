@@ -207,7 +207,7 @@ export default function Carrusel({
                 <TouchableOpacity
                   className="bg-[#FED20F] px-3 py-3 flex-1 justify-center items-center rounded-sm w-1/2 h-auto"
                   onPress={() => addItem({
-                    id: String(item.id || item.cod || item.nombre),
+                    id: String(item.id),
                     nombre: item.nombre,
                     precio: Number(item.precio) || 0,
                     imagen: item.imagen,

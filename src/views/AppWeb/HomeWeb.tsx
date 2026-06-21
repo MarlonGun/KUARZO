@@ -51,11 +51,12 @@ const HomeWeb = () => {
   );
 
   useEffect(() => {
-    const fetchProductos = async () => {
+    const fetchData = async () => {
       try {
-        const response = await api.get("/productos");
-        if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-          const mapped = response.data.map((p: any) => ({
+        // 1. Productos DESTACADOS para el carrusel (máximo 10)
+        const destacadosRes = await api.get("/productos/destacados");
+        if (destacadosRes.data && Array.isArray(destacadosRes.data) && destacadosRes.data.length > 0) {
+          const mappedDestacados = destacadosRes.data.map((p: any) => ({
             id: String(p.id),
             nombre: p.nombre,
             descripcion: p.descripcion || "",
@@ -63,33 +64,38 @@ const HomeWeb = () => {
             precio: Number(p.precio),
             imagen: resolveProductImage(p),
           }));
+          setFeaturedProducts(mappedDestacados);
 
-          const shuffled = shuffleArray(mapped);
-
-          // 1. Carrusel de Banners (arriba): tomamos hasta 3 imágenes de productos aleatorios
-          const bannerImages = shuffled.slice(0, 3).map((p) => p.imagen);
+          // Banners: usar las imágenes de los productos destacados
+          const bannerImages = mappedDestacados.slice(0, 3).map((p: any) => p.imagen);
           if (bannerImages.length > 0) {
             setBanners(bannerImages);
           }
+        }
 
-          // 2. Productos Destacados: tomamos hasta 8 productos aleatorios
-          const featured = shuffled.slice(0, Math.min(8, shuffled.length));
-          setFeaturedProducts(featured);
-
-          // 3. Más Productos (los 2 destacados al lado del cuadro negro)
-          let extra: any[] = [];
+        // 2. Productos NORMALES para la sección "Más Productos"
+        const todosRes = await api.get("/productos");
+        if (todosRes.data && Array.isArray(todosRes.data) && todosRes.data.length > 0) {
+          const mapped = todosRes.data.map((p: any) => ({
+            id: String(p.id),
+            nombre: p.nombre,
+            descripcion: p.descripcion || "",
+            categoria: p.categoriaNombre || (p.categoria && typeof p.categoria === "object" ? p.categoria.nombre : (p.categoria || "General")),
+            precio: Number(p.precio),
+            imagen: resolveProductImage(p),
+          }));
+          const shuffled = shuffleArray(mapped);
           if (shuffled.length >= 2) {
-            extra = [shuffled[shuffled.length - 1], shuffled[shuffled.length - 2]];
+            setExtraProducts([shuffled[0], shuffled[1]]);
           } else if (shuffled.length === 1) {
-            extra = [shuffled[0], shuffled[0]];
+            setExtraProducts([shuffled[0], shuffled[0]]);
           }
-          setExtraProducts(extra);
         }
       } catch (error) {
         console.error("Error al cargar productos en HomeWeb desde la API:", error);
       }
     };
-    fetchProductos();
+    fetchData();
   }, []);
 
   return (

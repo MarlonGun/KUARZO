@@ -165,8 +165,9 @@ class ProductsTab(ctk.CTkFrame):
             # ID
             ctk.CTkLabel(row, text=str(p["id"]), font=FONTS["body"], anchor="w").grid(row=0, column=0, padx=15, sticky="w")
             
-            # Name
-            ctk.CTkLabel(row, text=p["nombre"], font=FONTS["body_bold"], text_color=THEME_COLORS["text_primary"], anchor="w").grid(row=0, column=1, padx=10, sticky="w")
+            # Name (with star if destacado)
+            display_name = ("⭐ " if p.get("destacado") else "") + p["nombre"]
+            ctk.CTkLabel(row, text=display_name, font=FONTS["body_bold"], text_color=THEME_COLORS["text_primary"], anchor="w").grid(row=0, column=1, padx=10, sticky="w")
             
             # Category
             cat_name = p.get("categoriaNombre") or p.get("categoria", {}).get("nombre", "General")
@@ -235,7 +236,7 @@ class ProductsTab(ctk.CTkFrame):
         # Open Toplevel Window
         dialog = ctk.CTkToplevel(self)
         dialog.title(title)
-        dialog.geometry("450x600")
+        dialog.geometry("450x650")
         dialog.configure(fg_color=THEME_COLORS["card_bg"])
         dialog.transient(self) # Keep on top of main window
         dialog.grab_set() # Focus lock
@@ -286,6 +287,20 @@ class ProductsTab(ctk.CTkFrame):
         desc_entry = ctk.CTkEntry(fields_frame, font=FONTS["body"], fg_color=THEME_COLORS["dark_bg"], border_color=THEME_COLORS["border"])
         desc_entry.pack(fill="x")
 
+        # 7. Destacado (checkbox)
+        destacado_var = ctk.BooleanVar(value=False)
+        destacado_check = ctk.CTkCheckBox(
+            fields_frame,
+            text="⭐ Producto Destacado (aparece en carrusel de inicio)",
+            font=FONTS["body"],
+            variable=destacado_var,
+            fg_color=THEME_COLORS["primary"],
+            hover_color=THEME_COLORS["primary_hover"],
+            text_color=THEME_COLORS["text_primary"],
+            border_color=THEME_COLORS["border"]
+        )
+        destacado_check.pack(fill="x", pady=(15, 0))
+
         # Prepopulate if editing
         if product_data:
             name_entry.insert(0, product_data.get("nombre", ""))
@@ -302,6 +317,7 @@ class ProductsTab(ctk.CTkFrame):
                     img_url = first_img
             img_entry.insert(0, img_url)
             desc_entry.insert(0, product_data.get("descripcion") or "")
+            destacado_var.set(bool(product_data.get("destacado", False)))
 
         # Save Action
         def on_save():
@@ -333,7 +349,8 @@ class ProductsTab(ctk.CTkFrame):
                 "precio": price_val,
                 "stock": stock_val,
                 "imagen": image,
-                "descripcion": desc
+                "descripcion": desc,
+                "destacado": destacado_var.get()
             })
             
             if success:
@@ -366,7 +383,8 @@ class ProductsTab(ctk.CTkFrame):
         elif self.connection_mode == "API de Railway":
             res = api_client.add_product(
                 data["nombre"], data["descripcion"], data["precio"], 
-                data["categoriaNombre"], data["stock"], data["imagen"]
+                data["categoriaNombre"], data["stock"], data["imagen"],
+                data.get("destacado", False)
             )
             if res.get("success"):
                 messagebox.showinfo("Éxito", "Producto añadido exitosamente en Railway.")
@@ -397,7 +415,8 @@ class ProductsTab(ctk.CTkFrame):
         elif self.connection_mode == "API de Railway":
             res = api_client.edit_product(
                 prod_id, data["nombre"], data["descripcion"], data["precio"], 
-                data["categoriaNombre"], data["stock"], data["imagen"]
+                data["categoriaNombre"], data["stock"], data["imagen"],
+                data.get("destacado", False)
             )
             if res.get("success"):
                 messagebox.showinfo("Éxito", "Producto actualizado en Railway.")

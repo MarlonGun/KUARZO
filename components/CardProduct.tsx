@@ -42,7 +42,7 @@ export const CardProduct = ({ producto }: { producto: any }) => {
                     className={`${isMobile ? 'w-full py-4 px-4' : 'flex-1 py-3'} bg-primary justify-center items-center rounded-sm`}
                     style={isMobile ? { minWidth: 0, width: '100%' } : undefined}
                     onPress={() => addItem({
-                        id: nombre,
+                        id: String(id),
                         nombre: nombre,
                         precio: precio,
                         imagen: imagen,
