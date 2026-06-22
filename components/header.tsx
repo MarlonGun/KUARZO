@@ -1,7 +1,7 @@
 import { useAuthStore } from '@/src/store/useAuthStore';
 import { useCartStore } from '@/src/store/useCartStore';
 import { MaterialIcons } from '@expo/vector-icons';
-import { router, usePathname } from 'expo-router';
+import { router, usePathname, Link } from 'expo-router';
 import React from 'react';
 import { Image, Pressable, Text, TextInput, View, useWindowDimensions } from 'react-native';
 
@@ -155,20 +155,18 @@ const Header = () => {
                 {menuItems.map((item, idx) => {
                     const isActive = item.route === '/' ? (pathname === '/' && item.label === 'Inicio') : pathname === item.route;
                     return (
-                        <Pressable
-                            key={idx}
-                            onPress={() => router.push(item.route as any)}
-                            style={{ cursor: 'pointer' }}
-                        >
-                            <Text
-                                className={`text-sm md:text-base font-roboto-medium transition-colors duration-200 ${isActive
-                                    ? 'text-orange-500 font-bold'
-                                    : 'text-gray-600 hover:text-orange-500'
-                                    }`}
-                            >
-                                {item.label}
-                            </Text>
-                        </Pressable>
+                        <Link href={item.route as any} key={idx} asChild>
+                            <Pressable style={{ cursor: 'pointer' }}>
+                                <Text
+                                    className={`text-sm md:text-base font-roboto-medium transition-colors duration-200 ${isActive
+                                        ? 'text-orange-500 font-bold'
+                                        : 'text-gray-600 hover:text-orange-500'
+                                        }`}
+                                >
+                                    {item.label}
+                                </Text>
+                            </Pressable>
+                        </Link>
                     );
                 })}
             </View>
