@@ -16,7 +16,7 @@ const DetalleProdMovil = () => {
     const { addItem } = useCartStore();
 
     const params = useLocalSearchParams();
-    const { id, nombre, descripcion, precio, imagen, categoria, stock } = params;
+    const { id, nombre, descripcion, precio, imagen, categoria, stock, imagenes } = params;
 
     const productNombre = nombre ? String(nombre) : 'Pulsera volcanica';
     const productDescripcion = descripcion
@@ -43,24 +43,27 @@ const DetalleProdMovil = () => {
         return { uri: String(img) };
     };
 
-    const localProductImages = useMemo(() => [
-        mainImage,
-        'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=600&q=80',
-        'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=600&q=80',
-    ], [mainImage]);
-
-    const localColorOptions = useMemo(() => [
-        { id: 'gold', label: 'Dorado', image: localProductImages[0] },
-        { id: 'black', label: 'Negro', image: localProductImages[1] },
-        { id: 'mix', label: 'Mixto', image: localProductImages[2] },
-    ], [localProductImages]);
+    const localProductImages = useMemo(() => {
+        let imgs = [mainImage];
+        if (imagenes && typeof imagenes === 'string') {
+            try {
+                const parsed = JSON.parse(imagenes);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    imgs = parsed.map((img: any) => img.urlImagen || img.imagenUrl || String(img));
+                }
+            } catch (e) {
+                // Ignore parse errors
+            }
+        }
+        return imgs;
+    }, [mainImage, imagenes]);
 
     const [selectedImage, setSelectedImage] = useState(localProductImages[0]);
     useEffect(() => {
         setSelectedImage(localProductImages[0]);
     }, [localProductImages]);
 
-    const [selectedColor, setSelectedColor] = useState(localColorOptions[0].id);
+
     const [quantity, setQuantity] = useState(1);
 
     return (
@@ -214,40 +217,35 @@ const DetalleProdMovil = () => {
                     <View style={{ borderTopWidth: 1, borderColor: '#f3f4f6', marginTop: 16 }} />
 
                     {/* Color */}
-                    <View style={{ marginTop: 16 }}>
-                        <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 16, color: '#111827' }}>Color:</Text>
-                        <View style={{ flexDirection: 'row', gap: 10, marginTop: 12 }}>
-                            {localColorOptions.map((option) => {
-                                const active = option.id === selectedColor;
-                                return (
-                                    <Pressable
-                                        key={option.id}
-                                        onPress={() => {
-                                            setSelectedColor(option.id);
-                                            setSelectedImage(option.image);
-                                        }}
-                                        style={{
-                                            width: 56,
-                                            height: 56,
-                                            borderWidth: active ? 2 : 1,
-                                            borderColor: active ? '#FFD700' : '#e5e7eb',
-                                            borderRadius: 8,
-                                            backgroundColor: '#fff',
-                                            padding: 3,
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                        }}
-                                    >
-                                        <Image
-                                            source={getImageSource(option.image)}
-                                            style={{ height: '100%', width: '100%' }}
-                                            resizeMode="contain"
-                                        />
-                                    </Pressable>
-                                );
-                            })}
-                        </View>
-                    </View>
+                        {localProductImages.length > 1 && (
+                            <View style={{ marginTop: 16 }}>
+                                <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 18, color: '#000' }}>Variaciones disponibles:</Text>
+                                <View style={{ flexDirection: 'row', gap: 8, marginTop: 12 }}>
+                                    {localProductImages.map((img, index) => {
+                                        const active = img === selectedImage;
+                                        return (
+                                            <Pressable
+                                                key={index}
+                                                onPress={() => setSelectedImage(img)}
+                                                style={{
+                                                    width: 56,
+                                                    height: 56,
+                                                    borderWidth: active ? 2 : 1,
+                                                    borderColor: active ? '#FED20F' : '#9ca3af',
+                                                    padding: 3,
+                                                }}
+                                            >
+                                                <Image
+                                                    source={getImageSource(img)}
+                                                    style={{ height: '100%', width: '100%' }}
+                                                    resizeMode="contain"
+                                                />
+                                            </Pressable>
+                                        );
+                                    })}
+                                </View>
+                            </View>
+                        )}
 
                     {/* Cantidad + Botón */}
                     <View style={{ marginTop: 24, marginBottom: 20 }}>

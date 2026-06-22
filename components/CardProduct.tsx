@@ -14,7 +14,7 @@ export const CardProduct = ({ producto }: { producto: any }) => {
 
     return (
         <View className="w-full overflow-hidden bg-transparent">
-            <Pressable onPress={() => router.push({ pathname: '/detalleProd', params: { id: id || nombre, nombre, descripcion, precio, imagen, categoria, stock } })}>
+            <Pressable onPress={() => router.push({ pathname: '/detalleProd', params: { id: id || nombre, nombre, descripcion, precio, imagen, categoria, stock, imagenes: producto.imagenes ? JSON.stringify(producto.imagenes) : undefined } })}>
                 {/* Sección superior con contenedor de imagen fijo */}
                 <View className="bg-[#f9f9f9] w-full h-48 justify-center items-center overflow-hidden">
                     <Image

@@ -230,6 +230,27 @@ class MockStore:
             }
         ]
 
+        self.contacts = [
+            {
+                "id": 1,
+                "nombre": "Juan",
+                "apellido": "Perez",
+                "correo": "juan@example.com",
+                "telefono": "3001234567",
+                "leido": False,
+                "createdAt": "2026-06-22T10:00:00.000Z"
+            },
+            {
+                "id": 2,
+                "nombre": "Ana",
+                "apellido": "Gomez",
+                "correo": "ana@example.com",
+                "telefono": "3109876543",
+                "leido": True,
+                "createdAt": "2026-06-21T15:30:00.000Z"
+            }
+        ]
+
     # --- AUTHENTICATION ---
     def authenticate(self, email, password):
         for user in self.users:
@@ -300,7 +321,7 @@ class MockStore:
     def get_product(self, prod_id):
         return next((p for p in self.products if p["id"] == int(prod_id)), None)
 
-    def add_product(self, name, description, price, category_name, stock, image_url=None):
+    def add_product(self, name, description, price, category_name, stock, image_url=None, destacado=False, imagen2=None, imagen3=None):
         cat = next((c for c in self.categories if c["nombre"] == category_name), None)
         cat_id = cat["id"] if cat else 1
         
@@ -314,12 +335,19 @@ class MockStore:
             "categoriaNombre": category_name,
             "stock": int(stock),
             "estado": "ACTIVO",
+            "destacado": destacado,
             "imagen": image_url or "https://i.postimg.cc/qvcyz6kk/PULSERA1.jpg"
         }
+        imagenes = []
+        if image_url: imagenes.append({"urlImagen": image_url})
+        if imagen2: imagenes.append({"urlImagen": imagen2})
+        if imagen3: imagenes.append({"urlImagen": imagen3})
+        new_prod["imagenes"] = imagenes
+        
         self.products.append(new_prod)
         return new_prod
 
-    def edit_product(self, prod_id, name, description, price, category_name, stock, image_url=None):
+    def edit_product(self, prod_id, name, description, price, category_name, stock, image_url=None, destacado=False, imagen2=None, imagen3=None):
         prod = self.get_product(prod_id)
         if prod:
             cat = next((c for c in self.categories if c["nombre"] == category_name), None)
@@ -331,8 +359,16 @@ class MockStore:
             prod["categoriaId"] = cat_id
             prod["categoriaNombre"] = category_name
             prod["stock"] = int(stock)
+            prod["destacado"] = destacado
             if image_url:
                 prod["imagen"] = image_url
+            
+            imagenes = []
+            if image_url: imagenes.append({"urlImagen": image_url})
+            if imagen2: imagenes.append({"urlImagen": imagen2})
+            if imagen3: imagenes.append({"urlImagen": imagen3})
+            prod["imagenes"] = imagenes
+            
             return prod
         return None
 
@@ -373,6 +409,21 @@ class MockStore:
                 return True
         return False
 
+    # --- CONTACTS MANAGEMENT ---
+    def get_contacts(self):
+        return self.contacts
+
+    def mark_contact_read(self, contact_id):
+        for c in self.contacts:
+            if c["id"] == int(contact_id):
+                c["leido"] = True
+                return True
+        return False
+
+    def delete_contact(self, contact_id):
+        initial_len = len(self.contacts)
+        self.contacts = [c for c in self.contacts if c["id"] != int(contact_id)]
+        return len(self.contacts) < initial_len
 
 # Global single instance of MockStore
 mock_db = MockStore()

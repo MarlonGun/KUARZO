@@ -2,6 +2,7 @@ import AppFooter from "@/components/AppFooter";
 import AppHeader from "@/components/AppHeader";
 import CustomButton from "@/components/CustomButton";
 import { MaterialIcons } from "@expo/vector-icons";
+import api from "@/src/services/api";
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -39,16 +40,23 @@ const ContactoWeb: React.FC = () => {
 
     setIsLoading(true);
 
-    // Simulate API request
-    setTimeout(() => {
+    try {
+      const response = await api.post('/contacto', { nombre, apellido, correo, telefono });
+      if (response.status === 201 || response.status === 200) {
+        setIsSuccess(true);
+        setNombre("");
+        setApellido("");
+        setCorreo("");
+        setTelefono("");
+      } else {
+        alert("Hubo un problema enviando tu mensaje. Intenta de nuevo.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error de conexión. Asegúrate de estar conectado a internet.");
+    } finally {
       setIsLoading(false);
-      setIsSuccess(true);
-      // Reset form
-      setNombre("");
-      setApellido("");
-      setCorreo("");
-      setTelefono("");
-    }, 1500);
+    }
   };
 
   return (
