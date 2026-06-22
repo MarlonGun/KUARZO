@@ -32,6 +32,7 @@ const goToDetail = (item: any) =>
       precio: item.precio,
       imagen: item.imagen,
       categoria: item.categoria || "",
+      stock: item.stock || 0,
     },
   });
 
@@ -57,6 +58,7 @@ const HomeWeb = () => {
             categoria: p.categoriaNombre || (p.categoria && typeof p.categoria === "object" ? p.categoria.nombre : (p.categoria || "General")),
             precio: Number(p.precio),
             imagen: resolveProductImage(p),
+            stock: p.stock ?? p.cantidad ?? 0,
           }));
           setFeaturedProducts(mappedDestacados);
 
@@ -75,6 +77,7 @@ const HomeWeb = () => {
             categoria: p.categoriaNombre || (p.categoria && typeof p.categoria === "object" ? p.categoria.nombre : (p.categoria || "General")),
             precio: Number(p.precio),
             imagen: resolveProductImage(p),
+            stock: p.stock ?? p.cantidad ?? 0,
           }));
           const shuffled = shuffleArray(mapped);
           if (shuffled.length >= 2) {

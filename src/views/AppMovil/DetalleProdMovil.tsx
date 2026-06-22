@@ -16,13 +16,14 @@ const DetalleProdMovil = () => {
     const { addItem } = useCartStore();
 
     const params = useLocalSearchParams();
-    const { id, nombre, descripcion, precio, imagen, categoria } = params;
+    const { id, nombre, descripcion, precio, imagen, categoria, stock } = params;
 
     const productNombre = nombre ? String(nombre) : 'Pulsera volcanica';
     const productDescripcion = descripcion
         ? String(descripcion)
         : 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.';
     const productPrecio = precio ? Number(precio) : 45000;
+    const productStock = stock ? Number(stock) : 0;
 
     // Resolve image source (handle local require numbers and remote URIs)
     const mainImage = useMemo(() => {
@@ -182,7 +183,7 @@ const DetalleProdMovil = () => {
                             paddingHorizontal: 16,
                         }}>
                             <Text style={{ fontFamily: 'OpenSans-Regular', fontSize: 13, color: '#111827', lineHeight: 18 }}>
-                                20 und{'\n'}disponibles
+                                {productStock} und{'\n'}disponibles
                             </Text>
                         </View>
                     </View>

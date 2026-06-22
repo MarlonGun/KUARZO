@@ -47,6 +47,7 @@ const CatalogoMovil = () => {
             categoria: p.categoriaNombre || (p.categoria && typeof p.categoria === "object" ? p.categoria.nombre : (p.categoria || "General")),
             precio: Number(p.precio),
             imagen: resolveProductImage(p),
+            stock: p.stock ?? p.cantidad ?? 0,
           }));
           if (mapped.length > 0) {
             setProductosList(mapped);
