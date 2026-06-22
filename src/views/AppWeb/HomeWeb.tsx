@@ -40,22 +40,16 @@ const HomeWeb = () => {
   const { width: windowWidth } = useWindowDimensions();
   const isSmallScreen = windowWidth < 900;
 
-  const [banners, setBanners] = useState<string[]>(() => 
-    shuffleArray(promoBanners.map((b) => b.imagen))
-  );
-  const [featuredProducts, setFeaturedProducts] = useState<any[]>(() => 
-    shuffleArray(sampleProducts)
-  );
-  const [extraProducts, setExtraProducts] = useState<any[]>(() => 
-    shuffleArray(sampleProducts2)
-  );
+  const [banners, setBanners] = useState<string[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+  const [extraProducts, setExtraProducts] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // 1. Productos DESTACADOS para el carrusel (máximo 10)
         const destacadosRes = await api.get("/productos/destacados");
-        if (destacadosRes.data && Array.isArray(destacadosRes.data) && destacadosRes.data.length > 0) {
+        if (destacadosRes.data && Array.isArray(destacadosRes.data)) {
           const mappedDestacados = destacadosRes.data.map((p: any) => ({
             id: String(p.id),
             nombre: p.nombre,
@@ -68,14 +62,12 @@ const HomeWeb = () => {
 
           // Banners: usar las imágenes de los productos destacados
           const bannerImages = mappedDestacados.slice(0, 3).map((p: any) => p.imagen);
-          if (bannerImages.length > 0) {
-            setBanners(bannerImages);
-          }
+          setBanners(bannerImages);
         }
 
         // 2. Productos NORMALES para la sección "Más Productos"
         const todosRes = await api.get("/productos");
-        if (todosRes.data && Array.isArray(todosRes.data) && todosRes.data.length > 0) {
+        if (todosRes.data && Array.isArray(todosRes.data)) {
           const mapped = todosRes.data.map((p: any) => ({
             id: String(p.id),
             nombre: p.nombre,
@@ -89,6 +81,8 @@ const HomeWeb = () => {
             setExtraProducts([shuffled[0], shuffled[1]]);
           } else if (shuffled.length === 1) {
             setExtraProducts([shuffled[0], shuffled[0]]);
+          } else {
+            setExtraProducts([]);
           }
         }
       } catch (error) {

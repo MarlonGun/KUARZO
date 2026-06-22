@@ -1,8 +1,12 @@
 import os
 import customtkinter as ctk
 from PIL import Image
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+try:
+    import matplotlib.pyplot as plt
+    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+    MATPLOTLIB_AVAILABLE = True
+except ImportError:
+    MATPLOTLIB_AVAILABLE = False
 from config import THEME_COLORS, FONTS, LOGO_PATH
 from mock_store import mock_db
 from database import db_helper
@@ -269,66 +273,72 @@ class DashboardWindow(ctk.CTkFrame):
         charts_frame.pack(fill="x", pady=10)
         charts_frame.columnconfigure((0, 1), weight=1, uniform="equal")
 
-        # Matplotlib Plot configuration
-        plt.style.use('dark_background')
-        
-        # Chart 1: Monthly Sales (Bar)
-        fig_bar, ax_bar = plt.subplots(figsize=(5, 3), dpi=100)
-        fig_bar.patch.set_facecolor(THEME_COLORS["card_bg"])
-        ax_bar.set_facecolor(THEME_COLORS["card_bg"])
-        
-        months = list(stats["monthly_sales"].keys())
-        sales = list(stats["monthly_sales"].values())
-        
-        ax_bar.bar(months, sales, color=THEME_COLORS["primary"], width=0.5)
-        ax_bar.set_title("Ventas por Mes (COP)", color=THEME_COLORS["text_primary"], fontsize=10, fontweight="bold")
-        ax_bar.tick_params(colors=THEME_COLORS["text_secondary"], labelsize=8)
-        ax_bar.spines['top'].set_visible(False)
-        ax_bar.spines['right'].set_visible(False)
-        ax_bar.spines['left'].set_color(THEME_COLORS["border"])
-        ax_bar.spines['bottom'].set_color(THEME_COLORS["border"])
-        ax_bar.grid(axis='y', linestyle='--', alpha=0.3)
-        fig_bar.tight_layout()
-
-        card_chart1 = ctk.CTkFrame(charts_frame, fg_color=THEME_COLORS["card_bg"], border_color=THEME_COLORS["border"], border_width=1, corner_radius=10)
-        card_chart1.grid(row=0, column=0, padx=10, sticky="nsew")
-        canvas1 = FigureCanvasTkAgg(fig_bar, master=card_chart1)
-        canvas1.draw()
-        canvas1.get_tk_widget().pack(fill="both", expand=True, padx=10, pady=10)
-
-        # Chart 2: Category distribution (Pie)
-        fig_pie, ax_pie = plt.subplots(figsize=(5, 3), dpi=100)
-        fig_pie.patch.set_facecolor(THEME_COLORS["card_bg"])
-        ax_pie.set_facecolor(THEME_COLORS["card_bg"])
-        
-        cats = list(stats["category_sales"].keys())
-        cat_vals = list(stats["category_sales"].values())
-        
-        if sum(cat_vals) > 0:
-            colors = [THEME_COLORS["primary"], THEME_COLORS["secondary"], THEME_COLORS["accent_blue"], THEME_COLORS["accent_green"], "#FFCDD2"]
-            ax_pie.pie(
-                cat_vals, 
-                labels=cats, 
-                autopct='%1.0f%%', 
-                colors=colors[:len(cats)], 
-                textprops={'color': THEME_COLORS["text_primary"], 'fontsize': 8},
-                startangle=90
-            )
-        else:
-            ax_pie.text(0.5, 0.5, "Sin datos de ventas", ha="center", va="center", color=THEME_COLORS["text_secondary"])
+        if MATPLOTLIB_AVAILABLE:
+            # Matplotlib Plot configuration
+            plt.style.use('dark_background')
             
-        ax_pie.set_title("Ventas por Categoría", color=THEME_COLORS["text_primary"], fontsize=10, fontweight="bold")
-        fig_pie.tight_layout()
+            # Chart 1: Monthly Sales (Bar)
+            fig_bar, ax_bar = plt.subplots(figsize=(5, 3), dpi=100)
+            fig_bar.patch.set_facecolor(THEME_COLORS["card_bg"])
+            ax_bar.set_facecolor(THEME_COLORS["card_bg"])
+            
+            months = list(stats["monthly_sales"].keys())
+            sales = list(stats["monthly_sales"].values())
+            
+            ax_bar.bar(months, sales, color=THEME_COLORS["primary"], width=0.5)
+            ax_bar.set_title("Ventas por Mes (COP)", color=THEME_COLORS["text_primary"], fontsize=10, fontweight="bold")
+            ax_bar.tick_params(colors=THEME_COLORS["text_secondary"], labelsize=8)
+            ax_bar.spines['top'].set_visible(False)
+            ax_bar.spines['right'].set_visible(False)
+            ax_bar.spines['left'].set_color(THEME_COLORS["border"])
+            ax_bar.spines['bottom'].set_color(THEME_COLORS["border"])
+            ax_bar.grid(axis='y', linestyle='--', alpha=0.3)
+            fig_bar.tight_layout()
 
-        card_chart2 = ctk.CTkFrame(charts_frame, fg_color=THEME_COLORS["card_bg"], border_color=THEME_COLORS["border"], border_width=1, corner_radius=10)
-        card_chart2.grid(row=0, column=1, padx=10, sticky="nsew")
-        canvas2 = FigureCanvasTkAgg(fig_pie, master=card_chart2)
-        canvas2.draw()
-        canvas2.get_tk_widget().pack(fill="both", expand=True, padx=10, pady=10)
+            card_chart1 = ctk.CTkFrame(charts_frame, fg_color=THEME_COLORS["card_bg"], border_color=THEME_COLORS["border"], border_width=1, corner_radius=10)
+            card_chart1.grid(row=0, column=0, padx=10, sticky="nsew")
+            canvas1 = FigureCanvasTkAgg(fig_bar, master=card_chart1)
+            canvas1.draw()
+            canvas1.get_tk_widget().pack(fill="both", expand=True, padx=10, pady=10)
 
-        # Close figures to release memory
-        plt.close(fig_bar)
-        plt.close(fig_pie)
+            # Chart 2: Category distribution (Pie)
+            fig_pie, ax_pie = plt.subplots(figsize=(5, 3), dpi=100)
+            fig_pie.patch.set_facecolor(THEME_COLORS["card_bg"])
+            ax_pie.set_facecolor(THEME_COLORS["card_bg"])
+            
+            cats = list(stats["category_sales"].keys())
+            cat_vals = list(stats["category_sales"].values())
+            
+            if sum(cat_vals) > 0:
+                colors = [THEME_COLORS["primary"], THEME_COLORS["secondary"], THEME_COLORS["accent_blue"], THEME_COLORS["accent_green"], "#FFCDD2"]
+                ax_pie.pie(
+                    cat_vals, 
+                    labels=cats, 
+                    autopct='%1.0f%%', 
+                    colors=colors[:len(cats)], 
+                    textprops={'color': THEME_COLORS["text_primary"], 'fontsize': 8},
+                    startangle=90
+                )
+            else:
+                ax_pie.text(0.5, 0.5, "Sin datos de ventas", ha="center", va="center", color=THEME_COLORS["text_secondary"])
+                
+            ax_pie.set_title("Ventas por Categoría", color=THEME_COLORS["text_primary"], fontsize=10, fontweight="bold")
+            fig_pie.tight_layout()
+
+            card_chart2 = ctk.CTkFrame(charts_frame, fg_color=THEME_COLORS["card_bg"], border_color=THEME_COLORS["border"], border_width=1, corner_radius=10)
+            card_chart2.grid(row=0, column=1, padx=10, sticky="nsew")
+            canvas2 = FigureCanvasTkAgg(fig_pie, master=card_chart2)
+            canvas2.draw()
+            canvas2.get_tk_widget().pack(fill="both", expand=True, padx=10, pady=10)
+
+            # Close figures to release memory
+            plt.close(fig_bar)
+            plt.close(fig_pie)
+        else:
+            msg_frame = ctk.CTkFrame(charts_frame, fg_color=THEME_COLORS["card_bg"], border_color=THEME_COLORS["border"], border_width=1, corner_radius=10, height=200)
+            msg_frame.grid(row=0, column=0, columnspan=2, padx=10, sticky="nsew")
+            msg_frame.pack_propagate(False)
+            ctk.CTkLabel(msg_frame, text="Las gráficas de análisis están deshabilitadas debido a restricciones de seguridad en este equipo.", font=FONTS["body"], text_color=THEME_COLORS["text_secondary"]).pack(expand=True)
 
         # 3. LOW INVENTORY WARNINGS
         self.create_low_inventory_table(scroll_frame)

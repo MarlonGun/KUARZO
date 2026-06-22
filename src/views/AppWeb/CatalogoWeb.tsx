@@ -512,7 +512,7 @@ const CatalogoScreen = () => {
   const platform = usePlatform();
   const [grupoActivo, setGrupoActivo] = useState("TODOS");
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
-  const [productosList, setProductosList] = useState<Producto[]>(staticProductos);
+  const [productosList, setProductosList] = useState<Producto[]>([]);
 
   useEffect(() => {
     const fetchProductos = async () => {
@@ -527,9 +527,7 @@ const CatalogoScreen = () => {
             precio: Number(p.precio),
             imagen: resolveProductImage(p),
           }));
-          if (mapped.length > 0) {
-            setProductosList(mapped);
-          }
+          setProductosList(mapped);
         }
       } catch (error) {
         console.error("Error al cargar productos desde la API:", error);
