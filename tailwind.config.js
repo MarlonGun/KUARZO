@@ -33,7 +33,7 @@ module.exports = {
       quaternary: {
         DEFAULT: '#C2C2C2',
         500: '#ffffff',
-        950: '#000000'
+        950: '#111827'
       }
     },
 

@@ -159,8 +159,8 @@ const Header = () => {
                             <Pressable style={{ cursor: 'pointer' }}>
                                 <Text
                                     className={`text-sm md:text-base font-roboto-medium transition-colors duration-200 ${isActive
-                                        ? 'text-orange-500 font-bold'
-                                        : 'text-gray-600 hover:text-orange-500'
+                                        ? 'text-secondary font-bold'
+                                        : 'text-gray-600 hover:text-secondary'
                                         }`}
                                 >
                                     {item.label}

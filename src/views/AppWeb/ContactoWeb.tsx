@@ -1,8 +1,8 @@
 import AppFooter from "@/components/AppFooter";
 import AppHeader from "@/components/AppHeader";
 import CustomButton from "@/components/CustomButton";
-import { MaterialIcons } from "@expo/vector-icons";
 import api from "@/src/services/api";
+import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   },
   infoCol: {
     width: "45%",
-    backgroundColor: "#000000",
+    backgroundColor: "#111827",
     padding: 40,
     justifyContent: "space-between",
   },
