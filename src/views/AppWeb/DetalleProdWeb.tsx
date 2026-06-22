@@ -19,13 +19,14 @@ const DetalleProdWeb = () => {
     const isSmallScreen = width < 900;
 
     const params = useLocalSearchParams();
-    const { id, nombre, descripcion, precio, imagen, categoria } = params;
+    const { id, nombre, descripcion, precio, imagen, categoria, stock } = params;
 
     const productNombre = nombre ? String(nombre) : 'Pulsera volcanica';
     const productDescripcion = descripcion
         ? String(descripcion)
         : 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci.';
     const productPrecio = precio ? Number(precio) : 45000;
+    const productStock = stock ? Number(stock) : 0;
     // Resolve image source (handle local require numbers and remote URIs)
     const mainImage = useMemo(() => {
         if (!imagen) return 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=1200&q=80';
@@ -153,7 +154,7 @@ const DetalleProdWeb = () => {
                             </View>
                             <View style={{ justifyContent: 'center', borderLeftWidth: 1, borderColor: '#9ca3af', paddingHorizontal: 16 }}>
                                 <Text style={{ fontFamily: 'OpenSans-Regular', fontSize: 14, color: '#000', lineHeight: 18 }}>
-                                    20 und{'\n'}disponibles
+                                    {productStock} und{'\n'}disponibles
                                 </Text>
                             </View>
                         </View>

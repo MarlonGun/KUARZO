@@ -10,11 +10,11 @@ export const CardProduct = ({ producto }: { producto: any }) => {
     const { width } = useWindowDimensions();
     const isMobile = platform === 'movil' || width < 760;
 
-    const { id, nombre, descripcion, precio, imagen, categoria } = producto;
+    const { id, nombre, descripcion, precio, imagen, categoria, stock } = producto;
 
     return (
         <View className="w-full overflow-hidden bg-transparent">
-            <Pressable onPress={() => router.push({ pathname: '/detalleProd', params: { id: id || nombre, nombre, descripcion, precio, imagen, categoria } })}>
+            <Pressable onPress={() => router.push({ pathname: '/detalleProd', params: { id: id || nombre, nombre, descripcion, precio, imagen, categoria, stock } })}>
                 {/* Sección superior con contenedor de imagen fijo */}
                 <View className="bg-[#f9f9f9] w-full h-48 justify-center items-center overflow-hidden">
                     <Image
