@@ -1,6 +1,6 @@
 import CustomButton from "@/components/CustomButton";
 import { router } from "expo-router";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, Text, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -8,9 +8,8 @@ import AppFooter from "@/components/AppFooter";
 import AppHeader from "@/components/AppHeader";
 import { CardProduct } from "@/components/CardProduct";
 import Carrusel from "@/components/Carrusel";
-import { promoBanners, sampleProducts, sampleProducts2 } from "@/src/data/mockData";
-import { useCartStore } from "@/src/store/useCartStore";
 import api from "@/src/services/api";
+import { useCartStore } from "@/src/store/useCartStore";
 import { resolveProductImage } from "@/src/utils/imageHelper";
 
 const shuffleArray = <T extends unknown>(array: T[]): T[] => {
@@ -130,61 +129,61 @@ const HomeWeb = () => {
         </View>
 
         {/* 4. SEGUNDA SECCIÓN: 2 PRODUCTOS + CUADRO NEGRO EXTENDIDO */}
-        <View style={{ 
-            flexDirection: isSmallScreen ? 'column' : 'row', 
-            marginBottom: 80, 
-            width: '100%',
+        <View style={{
+          flexDirection: isSmallScreen ? 'column' : 'row',
+          marginBottom: 80,
+          width: '100%',
         }}>
-            {/* Espaciador izquierdo - Solo se muestra en desktop */}
-            {!isSmallScreen && (
-                <View style={{ width: Math.max(0, (windowWidth - 1350) / 2) + 20 }} />
+          {/* Espaciador izquierdo - Solo se muestra en desktop */}
+          {!isSmallScreen && (
+            <View style={{ width: Math.max(0, (windowWidth - 1350) / 2) + 20 }} />
+          )}
+
+          {/* Los 2 productos */}
+          <View style={{
+            flexDirection: isSmallScreen ? 'column' : 'row',
+            gap: 20,
+            width: isSmallScreen ? '100%' : (Math.min(windowWidth, 1350) - 40) * 0.5,
+            paddingHorizontal: isSmallScreen ? 20 : 0
+          }}>
+            {extraProducts[0] && (
+              <View style={{ flex: 1 }}>
+                <CardProduct producto={extraProducts[0]} />
+              </View>
             )}
-            
-            {/* Los 2 productos */}
-            <View style={{ 
-                flexDirection: isSmallScreen ? 'column' : 'row', 
-                gap: 20, 
-                width: isSmallScreen ? '100%' : (Math.min(windowWidth, 1350) - 40) * 0.5,
-                paddingHorizontal: isSmallScreen ? 20 : 0
-            }}>
-                {extraProducts[0] && (
-                  <View style={{ flex: 1 }}>
-                      <CardProduct producto={extraProducts[0]} />
-                  </View>
-                )}
-                {extraProducts[1] && (
-                  <View style={{ flex: 1 }}>
-                      <CardProduct producto={extraProducts[1]} />
-                  </View>
-                )}
-            </View>
+            {extraProducts[1] && (
+              <View style={{ flex: 1 }}>
+                <CardProduct producto={extraProducts[1]} />
+              </View>
+            )}
+          </View>
 
-            {/* Cuadro Negro a la derecha */}
-            <View style={{
-                flex: 1,
-                backgroundColor: '#000000',
-                padding: isSmallScreen ? 30 : 50,
-                justifyContent: 'center',
-                marginLeft: isSmallScreen ? 0 : 20,
-                marginTop: isSmallScreen ? 20 : 0
+          {/* Cuadro Negro a la derecha */}
+          <View style={{
+            flex: 1,
+            backgroundColor: '#111827',
+            padding: isSmallScreen ? 30 : 50,
+            justifyContent: 'center',
+            marginLeft: isSmallScreen ? 0 : 20,
+            marginTop: isSmallScreen ? 20 : 0
+          }}>
+            <Text style={{
+              color: '#fff',
+              fontFamily: 'Roboto-Bold',
+              fontSize: isSmallScreen ? 32 : 42,
+              lineHeight: isSmallScreen ? 36 : 46,
+              marginBottom: 20,
+              textTransform: 'uppercase'
             }}>
-                <Text style={{
-                    color: '#fff',
-                    fontFamily: 'Roboto-Bold',
-                    fontSize: isSmallScreen ? 32 : 42,
-                    lineHeight: isSmallScreen ? 36 : 46,
-                    marginBottom: 20,
-                    textTransform: 'uppercase'
-                }}>
-                    Mas{"\n"}Productos
-                </Text>
+              Mas{"\n"}Productos
+            </Text>
 
-                <CustomButton
-                  onPress={() => router.push("/catalogo")}
-                  children="Ver más"
-                  className={isSmallScreen ? "w-full text-base" : "w-1/2 text-base"}
-                />
-            </View>
+            <CustomButton
+              onPress={() => router.push("/catalogo")}
+              children="Ver más"
+              className={isSmallScreen ? "w-full text-base" : "w-1/2 text-base"}
+            />
+          </View>
         </View>
 
         {/* 5. FOOTER WEB */}
