@@ -26,7 +26,7 @@ const Header = () => {
     const menuItems = [
         { label: 'Inicio', route: '/' },
         { label: 'Catálogo', route: '/catalogo' },
-        { label: 'Nosotros', route: '/' },
+        { label: 'Nosotros', route: '/nosotros' },
         { label: 'Contacto', route: '/contacto' },
     ];
 
