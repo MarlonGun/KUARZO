@@ -82,7 +82,7 @@ class ApiClient:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def add_product(self, name, description, price, category_name, stock, image_url=None, destacado=False):
+    def add_product(self, name, description, price, category_name, stock, image_url=None, destacado=False, imagen2=None, imagen3=None):
         """Endpoint: POST /api/productos"""
         category_id = {
             "Pulseras": 1,
@@ -101,6 +101,10 @@ class ApiClient:
         }
         if image_url:
             payload["imagen"] = image_url
+        if imagen2:
+            payload["imagen2"] = imagen2
+        if imagen3:
+            payload["imagen3"] = imagen3
             
         try:
             r = self._request("POST", "/productos", json=payload)
@@ -116,7 +120,7 @@ class ApiClient:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def edit_product(self, prod_id, name, description, price, category_name, stock, image_url=None, destacado=False):
+    def edit_product(self, prod_id, name, description, price, category_name, stock, image_url=None, destacado=False, imagen2=None, imagen3=None):
         """Endpoint: PUT /api/productos/:id"""
         category_id = {
             "Pulseras": 1,
@@ -135,6 +139,10 @@ class ApiClient:
         }
         if image_url:
             payload["imagen"] = image_url
+        if imagen2:
+            payload["imagen2"] = imagen2
+        if imagen3:
+            payload["imagen3"] = imagen3
 
         try:
             r = self._request("PUT", f"/productos/{prod_id}", json=payload)
@@ -187,6 +195,38 @@ class ApiClient:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
+    # --- CONTACTS MANAGEMENT ---
+    def get_contacts(self):
+        """Endpoint: GET /api/contacto"""
+        try:
+            r = self._request("GET", "/contacto")
+            if r.status_code == 200:
+                return {"success": True, "data": r.json()}
+            return {"success": False, "error": r.text}
+        except requests.RequestException:
+            return {"success": False, "error": "Error de conexión."}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def mark_contact_read(self, contact_id):
+        """Endpoint: PUT /api/contacto/:id/leido"""
+        try:
+            r = self._request("PUT", f"/contacto/{contact_id}/leido")
+            if r.status_code in [200, 204]:
+                return {"success": True}
+            return {"success": False, "error": r.text}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def delete_contact(self, contact_id):
+        """Endpoint: DELETE /api/contacto/:id"""
+        try:
+            r = self._request("DELETE", f"/contacto/{contact_id}")
+            if r.status_code in [200, 204]:
+                return {"success": True}
+            return {"success": False, "error": r.text}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
 
 # Global API Client instance
 api_client = ApiClient()

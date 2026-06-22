@@ -16,6 +16,7 @@ from api_client import api_client
 from products_tab import ProductsTab
 from orders_tab import OrdersTab
 from users_tab import UsersTab
+from contact_tab import ContactTab
 
 class DashboardWindow(ctk.CTkFrame):
     def __init__(self, parent, user_info, connection_mode, on_logout):
@@ -73,6 +74,7 @@ class DashboardWindow(ctk.CTkFrame):
         self.btn_products = self.create_sidebar_button("Productos", "shopping-bag", self.show_products_tab)
         self.btn_orders = self.create_sidebar_button("Pedidos", "shopping-cart", self.show_orders_tab)
         self.btn_users = self.create_sidebar_button("Usuarios", "users", self.show_users_tab)
+        self.btn_contacts = self.create_sidebar_button("Contacto", "message-circle", self.show_contacts_tab)
         
         # Logout button pinned to bottom
         logout_btn = ctk.CTkButton(
@@ -173,7 +175,7 @@ class DashboardWindow(ctk.CTkFrame):
 
     def set_active_sidebar_button(self, active_btn):
         # Reset all
-        for btn in [self.btn_dashboard, self.btn_products, self.btn_orders, self.btn_users]:
+        for btn in [self.btn_dashboard, self.btn_products, self.btn_orders, self.btn_users, self.btn_contacts]:
             btn.configure(
                 fg_color="transparent", 
                 text_color=THEME_COLORS["text_secondary"]
@@ -467,6 +469,14 @@ class DashboardWindow(ctk.CTkFrame):
         
         # Load tab component dynamically
         UsersTab(self.viewport, self.connection_mode, self.load_data)
+
+    def show_contacts_tab(self):
+        self.active_tab_title.configure(text="Mensajes de Contacto")
+        self.set_active_sidebar_button(self.btn_contacts)
+        self.clear_viewport()
+        
+        # Load tab component dynamically
+        ContactTab(self.viewport, self.connection_mode)
 
     def handle_logout(self):
         self.on_logout()

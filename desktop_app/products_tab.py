@@ -236,7 +236,7 @@ class ProductsTab(ctk.CTkFrame):
         # Open Toplevel Window
         dialog = ctk.CTkToplevel(self)
         dialog.title(title)
-        dialog.geometry("450x650")
+        dialog.geometry("500x750")
         dialog.configure(fg_color=THEME_COLORS["card_bg"])
         dialog.transient(self) # Keep on top of main window
         dialog.grab_set() # Focus lock
@@ -277,10 +277,18 @@ class ProductsTab(ctk.CTkFrame):
         stock_entry = ctk.CTkEntry(fields_frame, font=FONTS["body"], fg_color=THEME_COLORS["dark_bg"], border_color=THEME_COLORS["border"], placeholder_text="ej: 10")
         stock_entry.pack(fill="x")
 
-        # 5. Image URL
-        ctk.CTkLabel(fields_frame, text="URL de la Imagen (Opcional)", font=FONTS["body_bold"], text_color=THEME_COLORS["text_primary"], anchor="w").pack(fill="x", pady=(10, 2))
+        # 5. Image URLs
+        ctk.CTkLabel(fields_frame, text="URL de la Imagen Principal", font=FONTS["body_bold"], text_color=THEME_COLORS["text_primary"], anchor="w").pack(fill="x", pady=(10, 2))
         img_entry = ctk.CTkEntry(fields_frame, font=FONTS["body"], fg_color=THEME_COLORS["dark_bg"], border_color=THEME_COLORS["border"], placeholder_text="ej: https://postimg.cc/...")
         img_entry.pack(fill="x")
+
+        ctk.CTkLabel(fields_frame, text="URL de la Imagen 2 (Opcional)", font=FONTS["body_bold"], text_color=THEME_COLORS["text_primary"], anchor="w").pack(fill="x", pady=(10, 2))
+        img2_entry = ctk.CTkEntry(fields_frame, font=FONTS["body"], fg_color=THEME_COLORS["dark_bg"], border_color=THEME_COLORS["border"], placeholder_text="Opcional")
+        img2_entry.pack(fill="x")
+
+        ctk.CTkLabel(fields_frame, text="URL de la Imagen 3 (Opcional)", font=FONTS["body_bold"], text_color=THEME_COLORS["text_primary"], anchor="w").pack(fill="x", pady=(10, 2))
+        img3_entry = ctk.CTkEntry(fields_frame, font=FONTS["body"], fg_color=THEME_COLORS["dark_bg"], border_color=THEME_COLORS["border"], placeholder_text="Opcional")
+        img3_entry.pack(fill="x")
 
         # 6. Description
         ctk.CTkLabel(fields_frame, text="Descripción", font=FONTS["body_bold"], text_color=THEME_COLORS["text_primary"], anchor="w").pack(fill="x", pady=(10, 2))
@@ -308,14 +316,14 @@ class ProductsTab(ctk.CTkFrame):
             price_entry.insert(0, str(int(float(product_data.get("precio", 0)))))
             stock_entry.insert(0, str(product_data.get("stock", 0)))
             # Resolve image URL from either flat attribute or nested imagenes list
-            img_url = product_data.get("imagen") or ""
-            if not img_url and product_data.get("imagenes") and len(product_data.get("imagenes")) > 0:
-                first_img = product_data.get("imagenes")[0]
-                if isinstance(first_img, dict):
-                    img_url = first_img.get("urlImagen") or first_img.get("imagenUrl") or ""
-                elif isinstance(first_img, str):
-                    img_url = first_img
-            img_entry.insert(0, img_url)
+            if product_data.get("imagenes"):
+                imgs = product_data.get("imagenes", [])
+                if len(imgs) > 0: img_entry.insert(0, imgs[0].get("urlImagen", ""))
+                if len(imgs) > 1: img2_entry.insert(0, imgs[1].get("urlImagen", ""))
+                if len(imgs) > 2: img3_entry.insert(0, imgs[2].get("urlImagen", ""))
+            elif product_data.get("imagen"):
+                img_entry.insert(0, product_data.get("imagen", ""))
+                
             desc_entry.insert(0, product_data.get("descripcion") or "")
             destacado_var.set(bool(product_data.get("destacado", False)))
 
@@ -325,7 +333,6 @@ class ProductsTab(ctk.CTkFrame):
             category = cat_combo.get()
             price = price_entry.get().strip()
             stock = stock_entry.get().strip()
-            image = img_entry.get().strip() or None
             desc = desc_entry.get().strip()
 
             # Validation
@@ -348,9 +355,11 @@ class ProductsTab(ctk.CTkFrame):
                 "categoriaNombre": category,
                 "precio": price_val,
                 "stock": stock_val,
-                "imagen": image,
                 "descripcion": desc,
-                "destacado": destacado_var.get()
+                "destacado": destacado_var.get(),
+                "imagen": img_entry.get().strip() or None,
+                "imagen2": img2_entry.get().strip() or None,
+                "imagen3": img3_entry.get().strip() or None
             })
             
             if success:
@@ -384,7 +393,9 @@ class ProductsTab(ctk.CTkFrame):
             res = api_client.add_product(
                 data["nombre"], data["descripcion"], data["precio"], 
                 data["categoriaNombre"], data["stock"], data["imagen"],
-                data.get("destacado", False)
+                data.get("destacado", False),
+                data.get("imagen2"),
+                data.get("imagen3")
             )
             if res.get("success"):
                 messagebox.showinfo("Éxito", "Producto añadido exitosamente en Railway.")
@@ -416,7 +427,9 @@ class ProductsTab(ctk.CTkFrame):
             res = api_client.edit_product(
                 prod_id, data["nombre"], data["descripcion"], data["precio"], 
                 data["categoriaNombre"], data["stock"], data["imagen"],
-                data.get("destacado", False)
+                data.get("destacado", False),
+                data.get("imagen2"),
+                data.get("imagen3")
             )
             if res.get("success"):
                 messagebox.showinfo("Éxito", "Producto actualizado en Railway.")
