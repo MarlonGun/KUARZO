@@ -70,7 +70,7 @@ const Header = () => {
     ];
 
     return (
-        <View style={{ backgroundColor: '#fff', width: '100%' }} className="shadow-sm">
+        <View style={{ backgroundColor: '#fff', width: '100%', zIndex: 999 }} className="shadow-sm">
             {/* Fila Principal */}
             <View
                 style={{
