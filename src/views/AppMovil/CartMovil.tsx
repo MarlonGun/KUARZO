@@ -79,22 +79,8 @@ export default function CartMovil() {
                 {
                     text: 'Continuar',
                     onPress: () => {
-                        // Codificar los items seleccionados como JSON en la URL
-                        const itemsToSend = selectedItems.map((item) => ({
-                            id: item.id,
-                            nombre: item.nombre,
-                            precio: item.precio,
-                            imagen: typeof item.imagen === 'number' ? '' : item.imagen,
-                            cantidad: item.cantidad,
-                        }));
-
-                        const encodedItems = encodeURIComponent(JSON.stringify(itemsToSend));
-                        const checkoutUrl = `${WEB_BASE_URL}/checkout?cartItems=${encodedItems}`;
-
-                        Linking.openURL(checkoutUrl).catch((err) => {
-                            console.error('Error al abrir el navegador:', err);
-                            Alert.alert('Error', 'No se pudo abrir el navegador. Intenta de nuevo.');
-                        });
+                        // Usar el enrutador interno en lugar de abrir el navegador externo
+                        router.push('/checkout');
                     },
                 },
             ]
