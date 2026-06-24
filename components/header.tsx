@@ -2,8 +2,9 @@ import { useAuthStore } from '@/src/store/useAuthStore';
 import { useCartStore } from '@/src/store/useCartStore';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router, usePathname, Link } from 'expo-router';
-import React from 'react';
-import { Image, Pressable, Text, TextInput, View, useWindowDimensions } from 'react-native';
+import { useProductStore, ProductData } from '@/src/store/useProductStore';
+import React, { useState, useEffect } from 'react';
+import { Image, Pressable, Text, TextInput, View, useWindowDimensions, TouchableOpacity } from 'react-native';
 
 const Header = () => {
     const { toggleSidebar, items } = useCartStore();
@@ -15,6 +16,44 @@ const Header = () => {
 
     const { width } = useWindowDimensions();
     const isMobile = width < 768;
+
+    // Estado del buscador
+    const [searchQuery, setSearchQuery] = useState('');
+    const [suggestions, setSuggestions] = useState<ProductData[]>([]);
+    const { products, fetchProducts } = useProductStore();
+
+    useEffect(() => {
+        fetchProducts(); // Carga productos si no se han cargado aún
+    }, []);
+
+    const handleSearch = (text: string) => {
+        setSearchQuery(text);
+        if (text.trim().length > 0) {
+            const filtered = products.filter(p => 
+                p.nombre.toLowerCase().includes(text.toLowerCase())
+            );
+            setSuggestions(filtered.slice(0, 5));
+        } else {
+            setSuggestions([]);
+        }
+    };
+
+    const handleSelectProduct = (producto: ProductData) => {
+        setSearchQuery('');
+        setSuggestions([]);
+        router.push({
+            pathname: '/detalleProd',
+            params: {
+                id: producto.id,
+                nombre: producto.nombre,
+                descripcion: producto.descripcion,
+                precio: producto.precio,
+                imagen: producto.imagen,
+                categoria: producto.categoria,
+                stock: producto.stock
+            }
+        });
+    };
 
     const handleLogout = async () => {
         await logout();
@@ -85,17 +124,51 @@ const Header = () => {
                 )}
 
                 {/* Área del Buscador - En móvil ocupará el 100% abajo, en desktop estará al centro */}
-                <View style={{ flex: 1, minWidth: isMobile ? '100%' : 200 }} className="px-2 max-w-3xl">
-                    <View className="flex-row items-center w-full h-11 px-4 bg-white border border-gray-300 rounded-full">
+                <View style={{ flex: 1, minWidth: isMobile ? '100%' : 200, zIndex: 50 }} className="px-2 max-w-3xl relative">
+                    <View className="flex-row items-center w-full h-11 px-4 bg-white border border-gray-300 rounded-full z-50">
                         <TextInput
                             placeholder="Buscar..."
                             className="flex-1 h-full text-base text-gray-800 font-normal outline-none"
                             placeholderTextColor='quaternary-950'
+                            value={searchQuery}
+                            onChangeText={handleSearch}
                         />
                         <Pressable className="ml-2">
                             <MaterialIcons name="search" size={20} color='quaternary-500' />
                         </Pressable>
                     </View>
+                    {/* Dropdown de Sugerencias */}
+                    {suggestions.length > 0 && (
+                        <View style={{
+                            position: 'absolute',
+                            top: 50,
+                            left: 8,
+                            right: 8,
+                            backgroundColor: '#fff',
+                            borderRadius: 12,
+                            padding: 8,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 4 },
+                            shadowOpacity: 0.1,
+                            shadowRadius: 8,
+                            elevation: 5,
+                            borderWidth: 1,
+                            borderColor: '#e5e7eb',
+                            zIndex: 60
+                        }}>
+                            {suggestions.map((item) => (
+                                <TouchableOpacity 
+                                    key={item.id} 
+                                    style={{ paddingVertical: 10, paddingHorizontal: 12, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' }}
+                                    onPress={() => handleSelectProduct(item)}
+                                >
+                                    <Text style={{ fontFamily: 'OpenSans-Regular', color: '#374151', fontSize: 14 }}>
+                                        {item.nombre}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    )}
                 </View>
 
                 {/* Área de Acciones - Solo se muestra aquí en Desktop */}
