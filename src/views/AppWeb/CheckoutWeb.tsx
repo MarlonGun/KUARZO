@@ -22,11 +22,35 @@ const CheckoutWeb = () => {
     const { status, cart } = useLocalSearchParams<{ status?: string, cart?: string }>();
 
     const selectedItems = React.useMemo(() => {
-        if (cart) {
+        let urlCart = cart;
+
+        // Fallback robusto para Web: leer exactamente la cadena de búsqueda cruda
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const rawCart = urlParams.get('cart');
+            if (rawCart) urlCart = rawCart;
+        }
+
+        if (urlCart) {
             try {
-                return JSON.parse(decodeURIComponent(cart));
+                const cartStr = Array.isArray(urlCart) ? urlCart[0] : urlCart;
+                
+                let decoded = cartStr;
+                // Si la cadena aún tiene caracteres codificados como %5B, los decodificamos
+                if (decoded.includes('%5B') || decoded.includes('%7B')) {
+                    decoded = decodeURIComponent(decoded);
+                }
+                
+                const parsed = JSON.parse(decoded);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    return parsed.map(item => ({
+                        ...item,
+                        precio: Number(item.precio),
+                        cantidad: Number(item.cantidad)
+                    }));
+                }
             } catch (e) {
-                console.error("Error parsing cart from URL", e);
+                console.error("Error parsing cart from URL:", e);
             }
         }
         return cartItems.filter(item => item.selected !== false);

@@ -79,7 +79,14 @@ export default function CartMovil() {
                     {
                         text: 'Continuar',
                         onPress: () => {
-                            const cartJson = encodeURIComponent(JSON.stringify(selectedItems));
+                            const cartPayload = selectedItems.map(item => ({
+                                id: item.id,
+                                nombre: item.nombre,
+                                precio: item.precio,
+                                cantidad: item.cantidad,
+                                imagen: typeof item.imagen === 'string' ? item.imagen : null,
+                            }));
+                            const cartJson = encodeURIComponent(JSON.stringify(cartPayload));
                             Linking.openURL(`https://kuarzo.netlify.app/checkout?cart=${cartJson}`);
                         },
                     },
