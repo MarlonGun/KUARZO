@@ -23,6 +23,7 @@ type Producto = {
   categoria: string;
   precio: number;
   imagen: string;
+  imagenes?: any;
 };
 
 const secciones = [
@@ -66,6 +67,7 @@ const CatalogoScreen = () => {
             precio: Number(p.precio),
             imagen: resolveProductImage(p),
             stock: p.stock ?? p.cantidad ?? 0,
+            imagenes: p.imagenes,
           }));
           setProductosList(mapped);
         }

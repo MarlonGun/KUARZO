@@ -9,6 +9,7 @@ export interface ProductData {
     categoria: string;
     precio: number;
     imagen: string;
+    imagenes?: any;
     stock: number;
     [key: string]: any;
 }
@@ -41,6 +42,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
                     precio: Number(p.precio),
                     imagen: resolveProductImage(p),
                     stock: p.stock ?? p.cantidad ?? 0,
+                    imagenes: p.imagenes,
                 }));
                 set({ products: mappedProducts, isLoading: false });
             } else {

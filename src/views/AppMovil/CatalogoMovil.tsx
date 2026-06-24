@@ -23,6 +23,7 @@ type Producto = {
   categoria: string;
   precio: number;
   imagen: string;
+  imagenes?: any;
 };
 
 const categorias = ["Todos", "Pulseras", "Cadenas", "Anillos", "Aretes", "Tobilleras"];
@@ -49,6 +50,7 @@ const CatalogoMovil = () => {
             precio: Number(p.precio),
             imagen: resolveProductImage(p),
             stock: p.stock ?? p.cantidad ?? 0,
+            imagenes: p.imagenes,
           }));
           if (mapped.length > 0) {
             setProductosList(mapped);
