@@ -18,14 +18,51 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const CheckoutWeb = () => {
-    const { items: cartItems, getSelectedTotal, clearSelectedItems } = useCartStore();
-    const selectedItems = cartItems.filter(item => item.selected !== false);
-    const subtotal = getSelectedTotal();
+    const { items: cartItems, clearSelectedItems } = useCartStore();
+    const { status, cart } = useLocalSearchParams<{ status?: string, cart?: string }>();
+
+    const selectedItems = React.useMemo(() => {
+        let urlCart = cart;
+
+        // Fallback robusto para Web: leer exactamente la cadena de búsqueda cruda
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const rawCart = urlParams.get('cart');
+            if (rawCart) urlCart = rawCart;
+        }
+
+        if (urlCart) {
+            try {
+                const cartStr = Array.isArray(urlCart) ? urlCart[0] : urlCart;
+                
+                let decoded = cartStr;
+                // Si la cadena aún tiene caracteres codificados como %5B, los decodificamos
+                if (decoded.includes('%5B') || decoded.includes('%7B')) {
+                    decoded = decodeURIComponent(decoded);
+                }
+                
+                const parsed = JSON.parse(decoded);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    return parsed.map(item => ({
+                        ...item,
+                        precio: Number(item.precio),
+                        cantidad: Number(item.cantidad)
+                    }));
+                }
+            } catch (e) {
+                console.error("Error parsing cart from URL:", e);
+            }
+        }
+        return cartItems.filter(item => item.selected !== false);
+    }, [cart, cartItems]);
+
+    const subtotal = React.useMemo(() => {
+        return selectedItems.reduce((acc: number, item: any) => acc + (item.precio * item.cantidad), 0);
+    }, [selectedItems]);
     const [metodoPago, setMetodoPago] = useState("Tarjeta");
     const [isProcessing, setIsProcessing] = useState(false);
 
     // Obtener parámetros de redirección de Mercado Pago
-    const { status } = useLocalSearchParams<{ status?: string }>();
 
     useEffect(() => {
         if (status === 'success' || status === 'approved') {
