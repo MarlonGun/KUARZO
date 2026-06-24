@@ -27,6 +27,9 @@ const LoginMovil: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const loginStore = useAuthStore((state: any) => state.login);
+    const isAuthenticated = useAuthStore((state: any) => state.isAuthenticated);
+    const user = useAuthStore((state: any) => state.user);
+    const logout = useAuthStore((state: any) => state.logout);
 
     const handleLogin = async (): Promise<void> => {
         if (!correo || !password) {
@@ -61,6 +64,124 @@ const LoginMovil: React.FC = () => {
             setIsLoading(false);
         }
     };
+
+    if (isAuthenticated && user) {
+        return (
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
+                <ScrollView
+                    contentContainerStyle={{
+                        flexGrow: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 24,
+                        paddingBottom: 100,
+                    }}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <Image
+                        source={require('@/assets/images/logo.png')}
+                        style={{ width: 150, height: 150, marginBottom: 24 }}
+                        contentFit="contain"
+                    />
+                    <View style={{
+                        width: '100%',
+                        maxWidth: 400,
+                        backgroundColor: '#fff',
+                        padding: 28,
+                        borderRadius: 16,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 6 },
+                        shadowOpacity: 0.08,
+                        shadowRadius: 16,
+                        elevation: 10,
+                        borderWidth: 1,
+                        borderColor: '#f3f4f6',
+                        alignItems: 'center'
+                    }}>
+                        <View style={{
+                            width: 80,
+                            height: 80,
+                            borderRadius: 40,
+                            backgroundColor: '#FFF8E1',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginBottom: 16
+                        }}>
+                            <MaterialIcons name="person" size={40} color="#FFD700" />
+                        </View>
+                        <Text style={{
+                            fontFamily: 'Roboto-Bold',
+                            fontSize: 24,
+                            color: '#111827',
+                            marginBottom: 6,
+                            textAlign: 'center'
+                        }}>
+                            ¡Hola, {user.primerNombre}!
+                        </Text>
+                        <Text style={{
+                            fontFamily: 'OpenSans-Regular',
+                            fontSize: 14,
+                            color: '#9ca3af',
+                            marginBottom: 24,
+                            textAlign: 'center'
+                        }}>
+                            Ya has iniciado sesión en tu cuenta
+                        </Text>
+                        
+                        <Pressable
+                            style={{
+                                backgroundColor: '#111827',
+                                paddingVertical: 14,
+                                paddingHorizontal: 32,
+                                borderRadius: 10,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '100%',
+                                marginBottom: 12
+                            }}
+                            onPress={() => router.push('/catalogo')}
+                        >
+                            <Text style={{
+                                fontFamily: 'Roboto-Bold',
+                                fontSize: 15,
+                                color: '#fff',
+                                letterSpacing: 1,
+                            }}>
+                                IR AL CATÁLOGO
+                            </Text>
+                        </Pressable>
+
+                        <Pressable
+                            style={{
+                                backgroundColor: '#fef2f2',
+                                paddingVertical: 14,
+                                paddingHorizontal: 32,
+                                borderRadius: 10,
+                                borderWidth: 1,
+                                borderColor: '#fca5a5',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '100%'
+                            }}
+                            onPress={() => {
+                                logout();
+                            }}
+                        >
+                            <Text style={{
+                                fontFamily: 'Roboto-Bold',
+                                fontSize: 15,
+                                color: '#ef4444',
+                                letterSpacing: 1,
+                            }}>
+                                CERRAR SESIÓN
+                            </Text>
+                        </Pressable>
+                    </View>
+                </ScrollView>
+                <BarrNaveg />
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>

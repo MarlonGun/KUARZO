@@ -1,4 +1,5 @@
 import { Image } from 'expo-image';
+import { Link } from 'expo-router';
 import React from 'react';
 import { Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 
@@ -25,12 +26,16 @@ export default function FlutterComponent() {
         <View className={`mb-8 ${isMobile ? 'w-full items-start' : 'w-1/3 items-center'}`}>
           <Text className="text-quaternary-500 text-xs font-bold uppercase tracking-widest mb-4">Información y Ayuda</Text>
           <View>
-            <TouchableOpacity className="mb-3">
-              <Text className="text-quaternary-500 text-sm">Políticas de Privacidad</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="mb-3">
-              <Text className="text-quaternary-500 text-sm">Términos y Condiciones</Text>
-            </TouchableOpacity>
+            <Link href="/politicas-privacidad" asChild>
+              <TouchableOpacity className="mb-3">
+                <Text className="text-quaternary-500 text-sm">Políticas de Privacidad</Text>
+              </TouchableOpacity>
+            </Link>
+            <Link href="/terminos-condiciones" asChild>
+              <TouchableOpacity className="mb-3">
+                <Text className="text-quaternary-500 text-sm">Términos y Condiciones</Text>
+              </TouchableOpacity>
+            </Link>
           </View>
         </View>
       </View>

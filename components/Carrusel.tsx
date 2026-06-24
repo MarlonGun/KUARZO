@@ -31,7 +31,7 @@ export interface CarruselProps {
   onProductPress?: (item: ProductData) => void;
 
   // Para configuración de imágenes (banners)
-  images?: string[];
+  images?: any[];
   onImagePress?: (url: string) => void;
   showDots?: boolean;
   autoPlay?: boolean;
@@ -111,6 +111,8 @@ export default function Carrusel({
       );
     }
 
+    const bannerHeight = screenWidth < 768 ? 300 : screenWidth < 1024 ? 450 : 650;
+
     return (
       <View className="w-full relative pb-8">
         <FlatList
@@ -132,11 +134,11 @@ export default function Carrusel({
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => onImagePress && onImagePress(item)}
-              style={{ width: screenWidth }}
+              style={{ width: screenWidth, height: bannerHeight }}
             >
               <Image
-                source={{ uri: item }}
-                className="w-full h-[650px] bg-transparent"
+                source={typeof item === 'string' ? { uri: item } : item}
+                style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
                 resizeMode="cover"
               />
             </TouchableOpacity>

@@ -12,6 +12,7 @@ import {
   ScrollView,
   Text,
   View,
+  FlatList,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -156,33 +157,35 @@ const CatalogoMovil = () => {
       </View>
 
       {/* Grid de productos */}
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingHorizontal: 12, paddingTop: 16, paddingBottom: 100 }}
+      <FlatList
+        data={productosFiltrados}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
         showsVerticalScrollIndicator={false}
-      >
-        {/* Breadcrumb */}
-        <View style={{
-          backgroundColor: '#f6f7fb',
-          alignSelf: 'flex-start',
-          borderRadius: 8,
-          paddingHorizontal: 12,
-          paddingVertical: 6,
-          marginBottom: 16,
-          marginLeft: 4,
-        }}>
-          <Text style={{ fontFamily: 'OpenSans-Regular', fontSize: 11, color: '#6b7280' }}>
-            TODOS / {categoriaActiva}
-          </Text>
-        </View>
-
-        {productosFiltrados.length === 0 ? (
+        contentContainerStyle={{ paddingHorizontal: 6, paddingTop: 16, paddingBottom: 100 }}
+        ListHeaderComponent={() => (
+          <View style={{
+            backgroundColor: '#f6f7fb',
+            alignSelf: 'flex-start',
+            borderRadius: 8,
+            paddingHorizontal: 12,
+            paddingVertical: 6,
+            marginBottom: 16,
+            marginLeft: 6,
+          }}>
+            <Text style={{ fontFamily: 'OpenSans-Regular', fontSize: 11, color: '#6b7280' }}>
+              TODOS / {categoriaActiva}
+            </Text>
+          </View>
+        )}
+        ListEmptyComponent={() => (
           <View style={{
             borderRadius: 16,
             backgroundColor: '#f6f7fb',
             paddingHorizontal: 24,
             paddingVertical: 48,
             alignItems: 'center',
+            marginHorizontal: 6,
           }}>
             <MaterialIcons name="search-off" size={48} color="#d1d5db" />
             <Text style={{
@@ -204,23 +207,19 @@ const CatalogoMovil = () => {
               Prueba otra categoría
             </Text>
           </View>
-        ) : (
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-            {productosFiltrados.map((producto) => (
-              <View
-                key={producto.id}
-                style={{
-                  width: '50%',
-                  paddingHorizontal: 6,
-                  marginBottom: 24,
-                }}
-              >
-                <CardProduct producto={producto} />
-              </View>
-            ))}
+        )}
+        renderItem={({ item }) => (
+          <View
+            style={{
+              width: '50%',
+              paddingHorizontal: 6,
+              marginBottom: 24,
+            }}
+          >
+            <CardProduct producto={item} />
           </View>
         )}
-      </ScrollView>
+      />
       <BarrNaveg />
     </SafeAreaView>
   );

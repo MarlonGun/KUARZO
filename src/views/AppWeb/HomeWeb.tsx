@@ -40,14 +40,18 @@ const HomeWeb = () => {
   const { width: windowWidth } = useWindowDimensions();
   const isSmallScreen = windowWidth < 900;
 
-  const [banners, setBanners] = useState<string[]>([]);
-  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
-  const [extraProducts, setExtraProducts] = useState<any[]>([]);
+  const banners = [
+    require('@/assets/images/joya1.png'),
+    require('@/assets/images/joya2.png'),
+    require('@/assets/images/joya3.png')
+  ];
+  const [featuredCarousel1, setFeaturedCarousel1] = useState<any[]>([]);
+  const [featuredCarousel2, setFeaturedCarousel2] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 1. Productos DESTACADOS para el carrusel (máximo 10)
+        // Productos DESTACADOS para los carruseles (máximo 10)
         const destacadosRes = await api.get("/productos/destacados");
         if (destacadosRes.data && Array.isArray(destacadosRes.data)) {
           const mappedDestacados = destacadosRes.data.map((p: any) => ({
@@ -59,33 +63,8 @@ const HomeWeb = () => {
             imagen: resolveProductImage(p),
             stock: p.stock ?? p.cantidad ?? 0,
           }));
-          setFeaturedProducts(mappedDestacados);
-
-          // Banners: usar las imágenes de los productos destacados
-          const bannerImages = mappedDestacados.slice(0, 3).map((p: any) => p.imagen);
-          setBanners(bannerImages);
-        }
-
-        // 2. Productos NORMALES para la sección "Más Productos"
-        const todosRes = await api.get("/productos");
-        if (todosRes.data && Array.isArray(todosRes.data)) {
-          const mapped = todosRes.data.map((p: any) => ({
-            id: String(p.id),
-            nombre: p.nombre,
-            descripcion: p.descripcion || "",
-            categoria: p.categoriaNombre || (p.categoria && typeof p.categoria === "object" ? p.categoria.nombre : (p.categoria || "General")),
-            precio: Number(p.precio),
-            imagen: resolveProductImage(p),
-            stock: p.stock ?? p.cantidad ?? 0,
-          }));
-          const shuffled = shuffleArray(mapped);
-          if (shuffled.length >= 2) {
-            setExtraProducts([shuffled[0], shuffled[1]]);
-          } else if (shuffled.length === 1) {
-            setExtraProducts([shuffled[0], shuffled[0]]);
-          } else {
-            setExtraProducts([]);
-          }
+          setFeaturedCarousel1(shuffleArray(mappedDestacados));
+          setFeaturedCarousel2(shuffleArray(mappedDestacados));
         }
       } catch (error) {
         console.error("Error al cargar productos en HomeWeb desde la API:", error);
@@ -113,77 +92,54 @@ const HomeWeb = () => {
         {/* CONTENEDOR CENTRADO PARA PRODUCTOS DESTACADOS */}
         <View style={{ maxWidth: 1350, width: '100%', alignSelf: 'center', paddingHorizontal: 20 }}>
           {/* 3. PRODUCTOS DESTACADOS */}
-          <View style={{ alignItems: 'center', marginVertical: 80 }}>
-            <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 24, color: '#000000', textTransform: 'uppercase', letterSpacing: 2 }}>
+          <View style={{ alignItems: 'center', marginTop: 80, marginBottom: 40 }}>
+            <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 24, color: '#000000', textTransform: 'uppercase', letterSpacing: 2, textAlign: 'center' }}>
               PRODUCTOS DESTACADOS
             </Text>
           </View>
 
+          <View style={{ marginBottom: 40 }}>
+            <Carrusel
+              type="products"
+              products={featuredCarousel1}
+              onProductPress={goToDetail}
+            />
+          </View>
+          
           <View style={{ marginBottom: 80 }}>
             <Carrusel
               type="products"
-              products={featuredProducts}
+              products={featuredCarousel2}
               onProductPress={goToDetail}
             />
           </View>
         </View>
 
-        {/* 4. SEGUNDA SECCIÓN: 2 PRODUCTOS + CUADRO NEGRO EXTENDIDO */}
+        {/* 4. CUADRO NEGRO EXTENDIDO FULL WIDTH */}
         <View style={{
-          flexDirection: isSmallScreen ? 'column' : 'row',
-          marginBottom: 80,
           width: '100%',
+          backgroundColor: '#111827',
+          paddingVertical: isSmallScreen ? 60 : 80,
+          paddingHorizontal: 20,
+          alignItems: 'center',
+          justifyContent: 'center',
         }}>
-          {/* Espaciador izquierdo - Solo se muestra en desktop */}
-          {!isSmallScreen && (
-            <View style={{ width: Math.max(0, (windowWidth - 1350) / 2) + 20 }} />
-          )}
-
-          {/* Los 2 productos */}
-          <View style={{
-            flexDirection: isSmallScreen ? 'column' : 'row',
-            gap: 20,
-            width: isSmallScreen ? '100%' : (Math.min(windowWidth, 1350) - 40) * 0.5,
-            paddingHorizontal: isSmallScreen ? 20 : 0
+          <Text style={{
+            color: '#fff',
+            fontFamily: 'Roboto-Bold',
+            fontSize: isSmallScreen ? 32 : 48,
+            textAlign: 'center',
+            marginBottom: 30,
+            textTransform: 'uppercase'
           }}>
-            {extraProducts[0] && (
-              <View style={{ flex: 1 }}>
-                <CardProduct producto={extraProducts[0]} />
-              </View>
-            )}
-            {extraProducts[1] && (
-              <View style={{ flex: 1 }}>
-                <CardProduct producto={extraProducts[1]} />
-              </View>
-            )}
-          </View>
+            Descubre Más Productos
+          </Text>
 
-          {/* Cuadro Negro a la derecha */}
-          <View style={{
-            flex: 1,
-            backgroundColor: '#111827',
-            padding: isSmallScreen ? 30 : 50,
-            justifyContent: 'center',
-            marginLeft: isSmallScreen ? 0 : 20,
-            marginTop: isSmallScreen ? 20 : 0
-          }}>
-            <Text style={{
-              color: '#fff',
-              fontFamily: 'Roboto-Bold',
-              fontSize: isSmallScreen ? 32 : 42,
-              lineHeight: isSmallScreen ? 36 : 46,
-              marginBottom: 20,
-              textTransform: 'uppercase'
-            }}>
-              Mas{"\n"}Productos
-            </Text>
-
-            <CustomButton
-              onPress={() => router.push("/catalogo")}
-              children="Ver más"
-              className={isSmallScreen ? "w-full text-base" : "w-1/2 text-base"}
-            />
-          </View>
+          <CustomButton
+            onPress={() => router.push("/catalogo")}
+            children="Ir al Catálogo"
+            className={isSmallScreen ? "w-full text-base max-w-[300px]" : "w-auto px-16 text-lg"}
+          />
         </View>
 
         {/* 5. FOOTER WEB */}
