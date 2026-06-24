@@ -62,6 +62,7 @@ const HomeWeb = () => {
             precio: Number(p.precio),
             imagen: resolveProductImage(p),
             stock: p.stock ?? p.cantidad ?? 0,
+            imagenes: p.imagenes,
           }));
           setFeaturedCarousel1(shuffleArray(mappedDestacados));
           setFeaturedCarousel2(shuffleArray(mappedDestacados));
