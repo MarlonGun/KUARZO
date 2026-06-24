@@ -1,10 +1,10 @@
 import AppHeader from "@/components/AppHeader";
 import CustomButton from "@/components/CustomButton";
-import { useCartStore } from "@/src/store/useCartStore";
 import api from "@/src/services/api";
+import { useCartStore } from "@/src/store/useCartStore";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Alert,
     Image,
@@ -99,8 +99,17 @@ const CheckoutWeb = () => {
             setIsProcessing(true);
 
             // 1. Obtener origen de redirección dinámica
-            const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8081';
-            
+            let origin = 'http://localhost:8081';
+            if (typeof window !== 'undefined' && window.location && window.location.origin) {
+                origin = window.location.origin;
+            } else {
+                // En móvil nativo, usamos expo-linking para obtener el esquema de la app
+                const Linking = require('expo-linking');
+                origin = Linking.createURL('');
+                // Quitar slash final si existe
+                if (origin.endsWith('/')) origin = origin.slice(0, -1);
+            }
+
             // 2. Crear la preferencia de pago en el backend
             const response = await api.post('/payments/crear-preferencia', {
                 productos: selectedItems,
@@ -226,31 +235,6 @@ const CheckoutWeb = () => {
                                             onChangeText={(t) => setForm({ ...form, departamento: t })}
                                         />
                                     </View>
-                                </View>
-                            </View>
-
-                            {/* MEDIOS DE PAGO */}
-                            <View className="rounded-2xl bg-white p-6">
-                                <Text className="mb-4 font-roboto-bold text-xl text-[#111827]">3. Método de Pago</Text>
-                                <View className="flex-col gap-3">
-                                    <Pressable
-                                        className={`flex-row items-center rounded-xl border p-4 ${metodoPago === 'Tarjeta' ? 'border-[#FED20F] bg-[#fffdf0]' : 'border-[#eef1f5] bg-[#fafbfc]'}`}
-                                        onPress={() => setMetodoPago('Tarjeta')}
-                                    >
-                                        <MaterialIcons name="credit-card" size={24} color={metodoPago === 'Tarjeta' ? '#111827' : '#9ca3af'} />
-                                        <Text className={`ml-3 font-roboto-medium ${metodoPago === 'Tarjeta' ? 'text-[#111827]' : 'text-[#6b7280]'}`}>
-                                            Tarjeta de Crédito / Débito
-                                        </Text>
-                                    </Pressable>
-                                    <Pressable
-                                        className={`flex-row items-center rounded-xl border p-4 ${metodoPago === 'Nequi' ? 'border-[#FED20F] bg-[#fffdf0]' : 'border-[#eef1f5] bg-[#fafbfc]'}`}
-                                        onPress={() => setMetodoPago('Nequi')}
-                                    >
-                                        <MaterialIcons name="phone-android" size={24} color={metodoPago === 'Nequi' ? '#111827' : '#9ca3af'} />
-                                        <Text className={`ml-3 font-roboto-medium ${metodoPago === 'Nequi' ? 'text-[#111827]' : 'text-[#6b7280]'}`}>
-                                            Nequi / Daviplata / PSE
-                                        </Text>
-                                    </Pressable>
                                 </View>
                             </View>
                         </View>
