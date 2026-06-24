@@ -18,14 +18,27 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const CheckoutWeb = () => {
-    const { items: cartItems, getSelectedTotal, clearSelectedItems } = useCartStore();
-    const selectedItems = cartItems.filter(item => item.selected !== false);
-    const subtotal = getSelectedTotal();
+    const { items: cartItems, clearSelectedItems } = useCartStore();
+    const { status, cart } = useLocalSearchParams<{ status?: string, cart?: string }>();
+
+    const selectedItems = React.useMemo(() => {
+        if (cart) {
+            try {
+                return JSON.parse(decodeURIComponent(cart));
+            } catch (e) {
+                console.error("Error parsing cart from URL", e);
+            }
+        }
+        return cartItems.filter(item => item.selected !== false);
+    }, [cart, cartItems]);
+
+    const subtotal = React.useMemo(() => {
+        return selectedItems.reduce((acc: number, item: any) => acc + (item.precio * item.cantidad), 0);
+    }, [selectedItems]);
     const [metodoPago, setMetodoPago] = useState("Tarjeta");
     const [isProcessing, setIsProcessing] = useState(false);
 
     // Obtener parámetros de redirección de Mercado Pago
-    const { status } = useLocalSearchParams<{ status?: string }>();
 
     useEffect(() => {
         if (status === 'success' || status === 'approved') {

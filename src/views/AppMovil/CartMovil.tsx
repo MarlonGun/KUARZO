@@ -3,7 +3,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import BarrNaveg from '@/components/BarrNaveg';
 import { router } from 'expo-router';
 import React, { useMemo } from 'react';
-import { Alert, Image, Linking, Pressable, ScrollView, Text, View } from 'react-native';
+import { Alert, Image, Linking, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 // ⚠️ Cambiar esta URL a la URL de producción del sitio web cuando esté desplegado
@@ -68,23 +68,24 @@ export default function CartMovil() {
     const handlePagarPedido = () => {
         if (!hasSelected) return;
 
-        Alert.alert(
-            '🌐 Redirigir al sitio web',
-            'Serás redirigido al sitio web para finalizar tu compra y completar los datos de envío y pago.',
-            [
-                {
-                    text: 'Cancelar',
-                    style: 'cancel',
-                },
-                {
-                    text: 'Continuar',
-                    onPress: () => {
-                        // Usar el enrutador interno en lugar de abrir el navegador externo
-                        router.push('/checkout');
+        if (Platform.OS === 'web') {
+            router.push('/checkout');
+        } else {
+            Alert.alert(
+                '🌐 Redirigir al sitio web',
+                'Serás redirigido al sitio web para finalizar tu compra y completar los datos de envío y pago.',
+                [
+                    { text: 'Cancelar', style: 'cancel' },
+                    {
+                        text: 'Continuar',
+                        onPress: () => {
+                            const cartJson = encodeURIComponent(JSON.stringify(selectedItems));
+                            Linking.openURL(`https://kuarzo.netlify.app/checkout?cart=${cartJson}`);
+                        },
                     },
-                },
-            ]
-        );
+                ]
+            );
+        }
     };
 
     return (
