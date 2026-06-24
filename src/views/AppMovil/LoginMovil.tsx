@@ -199,20 +199,6 @@ const LoginMovil: React.FC = () => {
                     }}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* Botón Volver */}
-                    <View style={{ width: '100%', maxWidth: 400, marginBottom: 8 }}>
-                        <Pressable
-                            onPress={() => router.back()}
-                            disabled={isLoading}
-                            style={{ flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'flex-start' }}
-                        >
-                            <MaterialIcons name="arrow-back" size={20} color="#111827" />
-                            <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 14, color: '#111827' }}>
-                                Volver
-                            </Text>
-                        </Pressable>
-                    </View>
-
                     {/* Logo */}
                     <Image
                         source={require('@/assets/images/logo.png')}
@@ -386,7 +372,6 @@ const LoginMovil: React.FC = () => {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
-            <BarrNaveg />
         </SafeAreaView>
     );
 };

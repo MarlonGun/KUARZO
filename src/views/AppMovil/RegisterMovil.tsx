@@ -377,7 +377,6 @@ const RegisterMovil: React.FC = () => {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
-            <BarrNaveg />
         </SafeAreaView>
     );
 };
