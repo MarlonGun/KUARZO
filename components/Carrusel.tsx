@@ -139,7 +139,7 @@ export default function Carrusel({
               <Image
                 source={typeof item === 'string' ? { uri: item } : item}
                 style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
-                resizeMode="cover"
+                resizeMode="contain"
               />
             </TouchableOpacity>
           )}
