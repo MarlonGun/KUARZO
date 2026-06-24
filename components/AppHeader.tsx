@@ -15,7 +15,7 @@ interface AppHeaderProps {
 const AppHeader = ({ platform }: AppHeaderProps) => {
     if (platform === 'movil') {
         return (
-            <View style={{ backgroundColor: '#FFFFFF' }}>
+            <View style={{ backgroundColor: '#FFFFFF', zIndex: 999 }}>
                 <BarraBusquedaMovil />
             </View>
         );
