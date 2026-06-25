@@ -119,8 +119,7 @@ const CheckoutWeb = () => {
     const formatearPrecio = (precio: number) =>
         `$${new Intl.NumberFormat("es-CO").format(precio)}`;
 
-    const costoEnvio = 15000;
-    const total = subtotal + (selectedItems.length > 0 ? costoEnvio : 0);
+    const total = subtotal;
 
     const handlePagar = async () => {
         if (selectedItems.length === 0) {
@@ -302,12 +301,7 @@ const CheckoutWeb = () => {
                                         <Text className="text-sm text-[#6b7280]">Subtotal ({selectedItems.length} items)</Text>
                                         <Text className="font-roboto-medium text-sm text-[#111827]">{formatearPrecio(subtotal)}</Text>
                                     </View>
-                                    <View className="mb-3 flex-row justify-between">
-                                        <Text className="text-sm text-[#6b7280]">Envío</Text>
-                                        <Text className="font-roboto-medium text-sm text-[#111827]">
-                                            {selectedItems.length > 0 ? formatearPrecio(costoEnvio) : "$0"}
-                                        </Text>
-                                    </View>
+
                                     <View className="my-4 flex-row justify-between border-t border-[#eef1f5] pt-4">
                                         <Text className="font-roboto-bold text-xl text-[#111827]">Total a Pagar</Text>
                                         <Text className="font-roboto-bold text-xl text-[#FF9E00]">{formatearPrecio(total)}</Text>
