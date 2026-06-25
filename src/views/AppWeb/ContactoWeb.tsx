@@ -115,16 +115,6 @@ const ContactoWeb: React.FC = () => {
                     <Text style={styles.infoItemValue}>contacto@kuarzo.com</Text>
                   </View>
                 </View>
-
-                <View style={styles.infoItem}>
-                  <View style={styles.iconContainer}>
-                    <MaterialIcons name="location-on" size={20} color="#FFD700" />
-                  </View>
-                  <View>
-                    <Text style={styles.infoItemLabel}>Visítanos</Text>
-                    <Text style={styles.infoItemValue}>Medellín, Colombia</Text>
-                  </View>
-                </View>
               </View>
             </View>
 
