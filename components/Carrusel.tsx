@@ -111,7 +111,8 @@ export default function Carrusel({
       );
     }
 
-    const bannerHeight = screenWidth < 768 ? 300 : screenWidth < 1024 ? 450 : 650;
+    // Calculamos el alto de forma dinámica basado en la proporción original de las imágenes (1672x941)
+    const bannerHeight = screenWidth * (941 / 1672);
 
     return (
       <View className="w-full relative pb-8">
@@ -139,7 +140,7 @@ export default function Carrusel({
               <Image
                 source={typeof item === 'string' ? { uri: item } : item}
                 style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
-                resizeMode="contain"
+                resizeMode="cover"
               />
             </TouchableOpacity>
           )}
