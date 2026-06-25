@@ -62,12 +62,16 @@ const Header = () => {
 
     const pathname = usePathname();
 
-    const menuItems = [
+    let menuItems = [
         { label: 'Inicio', route: '/' },
         { label: 'Catálogo', route: '/catalogo' },
         { label: 'Nosotros', route: '/nosotros' },
         { label: 'Contacto', route: '/contacto' },
     ];
+
+    if (isAuthenticated) {
+        menuItems = menuItems.filter(item => item.label !== 'Nosotros');
+    }
 
     return (
         <View style={{ backgroundColor: '#fff', width: '100%', zIndex: 999 }} className="shadow-sm">

@@ -33,16 +33,6 @@ class UsersTab(ctk.CTkFrame):
         self.search_entry.pack(side="left")
         self.search_entry.bind("<KeyRelease>", lambda e: self.refresh_users())
 
-        # Connection Mode Indicator Label
-        if self.connection_mode == "API de Railway":
-            lbl_info = ctk.CTkLabel(
-                control_bar,
-                text="ℹ️ Pestaña limitada en modo API (API pública no expone usuarios por privacidad)",
-                font=FONTS["small"],
-                text_color=THEME_COLORS["secondary"]
-            )
-            lbl_info.pack(side="right", padx=10)
-
         # 2. Table Container
         self.table_frame = ctk.CTkFrame(
             self,
@@ -178,7 +168,7 @@ class UsersTab(ctk.CTkFrame):
                 fg_color=toggle_color,
                 hover_color=toggle_hover,
                 text_color="#FFFFFF" if status == "ACTIVO" else "#000000",
-                state="disabled" if is_self or self.connection_mode == "API de Railway" else "normal",
+                state="disabled" if is_self else "normal",
                 command=lambda user=u: self.toggle_user_status(user)
             )
             status_btn.pack(side="left", padx=3)
@@ -194,7 +184,7 @@ class UsersTab(ctk.CTkFrame):
                 fg_color=THEME_COLORS["secondary"],
                 hover_color=THEME_COLORS["secondary_hover"],
                 text_color="#FFFFFF",
-                state="disabled" if is_self or self.connection_mode == "API de Railway" else "normal",
+                state="disabled" if is_self else "normal",
                 command=lambda user=u: self.toggle_user_role(user)
             )
             role_btn.pack(side="left", padx=3)
@@ -213,6 +203,11 @@ class UsersTab(ctk.CTkFrame):
 
         if self.connection_mode == "Simulación (Demo)":
             success = mock_db.update_user_status(user_id, next_status)
+        elif self.connection_mode == "API de Railway":
+            res = api_client.update_user_status(user_id, next_status)
+            success = res.get("success", False)
+            if not success:
+                messagebox.showerror("Error", f"Error API: {res.get('error')}")
         elif self.connection_mode == "Base de Datos Local":
             success = db_helper.update_user_status(user_id, next_status)
 
@@ -239,6 +234,11 @@ class UsersTab(ctk.CTkFrame):
 
         if self.connection_mode == "Simulación (Demo)":
             success = mock_db.update_user_role(user_id, next_rol_name, next_rol_id)
+        elif self.connection_mode == "API de Railway":
+            res = api_client.update_user_role(user_id, next_rol_id)
+            success = res.get("success", False)
+            if not success:
+                messagebox.showerror("Error", f"Error API: {res.get('error')}")
         elif self.connection_mode == "Base de Datos Local":
             success = db_helper.update_user_role(user_id, next_rol_name, next_rol_id)
 
