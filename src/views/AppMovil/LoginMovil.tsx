@@ -127,7 +127,7 @@ const LoginMovil: React.FC = () => {
                         }}>
                             Ya has iniciado sesión en tu cuenta
                         </Text>
-                        
+
                         <Pressable
                             style={{
                                 backgroundColor: '#111827',
@@ -328,7 +328,6 @@ const LoginMovil: React.FC = () => {
                                 fontSize: 13,
                                 color: '#f97316',
                             }}>
-                                ¿Olvidaste tu contraseña?
                             </Text>
                         </Pressable>
 
