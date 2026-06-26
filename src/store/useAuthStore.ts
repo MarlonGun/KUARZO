@@ -25,6 +25,9 @@ export const useAuthStore = create<AuthState>((set) => ({
       console.error('Error al guardar el usuario en AsyncStorage:', e);
     });
     set({ user, isAuthenticated: true });
+    // Fetch cart immediately after login
+    const { useCartStore } = require('./useCartStore');
+    useCartStore.getState().fetchCart();
   },
   logout: async () => {
     try {
@@ -34,6 +37,9 @@ export const useAuthStore = create<AuthState>((set) => ({
       console.error('Error al remover la sesión en logout:', e);
     }
     set({ user: null, isAuthenticated: false });
+    // Clear local cart on logout
+    const { useCartStore } = require('./useCartStore');
+    useCartStore.getState().clearCart();
   },
   initializeAuth: async () => {
     try {
@@ -42,6 +48,9 @@ export const useAuthStore = create<AuthState>((set) => ({
       if (token && userInfoStr) {
         const user = JSON.parse(userInfoStr);
         set({ user, isAuthenticated: true });
+        // Fetch cart when app initializes with active session
+        const { useCartStore } = require('./useCartStore');
+        useCartStore.getState().fetchCart();
       } else {
         set({ user: null, isAuthenticated: false });
       }

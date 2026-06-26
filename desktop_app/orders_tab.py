@@ -141,7 +141,7 @@ class OrdersTab(ctk.CTkFrame):
             status_text = o.get("estado", "PENDIENTE")
             status_color = THEME_COLORS["accent_red"]
             if status_text == "PENDIENTE": status_color = THEME_COLORS["secondary"]
-            elif status_text in ["ACEPTADO", "ENVIADO"]: status_color = THEME_COLORS["accent_blue"]
+            elif status_text in ["ACEPTADO", "ENVIADO", "PROCESADO"]: status_color = THEME_COLORS["accent_blue"]
             elif status_text == "ENTREGADO": status_color = THEME_COLORS["accent_green"]
 
             badge = ctk.CTkFrame(row, fg_color=status_color, corner_radius=5, width=95, height=24)
@@ -261,6 +261,32 @@ class OrdersTab(ctk.CTkFrame):
                 text_color="#FFFFFF",
                 height=38,
                 command=lambda: self.update_status("CANCELADO", "¿Estás seguro de que deseas cancelar este pedido?")
+            )
+            cancel_btn.pack(fill="x", pady=5)
+
+        elif status_text == "PROCESADO" or status_text == "ACEPTADO":
+            # Pago confirmado o pedido aceptado, siguiente paso: Enviar
+            send_btn = ctk.CTkButton(
+                actions_frame,
+                text="Marcar como Enviado",
+                font=FONTS["body_bold"],
+                fg_color=THEME_COLORS["accent_blue"],
+                hover_color="#005a9e",
+                text_color="#FFFFFF",
+                height=38,
+                command=lambda: self.update_status("ENVIADO", "El pedido está en camino al cliente.")
+            )
+            send_btn.pack(fill="x", pady=5)
+
+            cancel_btn = ctk.CTkButton(
+                actions_frame,
+                text="Cancelar Pedido",
+                font=FONTS["body_bold"],
+                fg_color=THEME_COLORS["accent_red"],
+                hover_color="#c0201a",
+                text_color="#FFFFFF",
+                height=38,
+                command=lambda: self.update_status("CANCELADO", "¿Estás seguro de que deseas cancelar este pedido? Se devolverá el stock.")
             )
             cancel_btn.pack(fill="x", pady=5)
 
