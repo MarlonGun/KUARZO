@@ -43,9 +43,9 @@ class UsersView(ctk.CTkFrame):
             
         # Fetch users
         query = """
-        SELECT u.id, u.primerNombre, u.primerApellido, u.correo, u.estado, r.nombre as rol
+        SELECT u.id, u.primerNombre, u.primerApellido, u.correo, u.estado, COALESCE(r.nombre, 'SIN ROL') as rol
         FROM usuario u
-        JOIN rol r ON u.rolId = r.id
+        LEFT JOIN rol r ON u.rolId = r.id
         ORDER BY u.id DESC
         """
         users = db.fetch_all(query)

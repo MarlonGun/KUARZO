@@ -39,14 +39,14 @@ const DetalleProdWeb = () => {
     // Helper for image source - More robust for Web/Expo
     const getImageSource = (img: any) => {
         if (!img) return { uri: 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=1200&q=80' };
-        
+
         // If it's a number (resource ID), return it as is
         if (typeof img === 'number') return img;
-        
+
         // If it's a string that represents a number (Expo resource ID from params)
         const num = Number(img);
         if (!isNaN(num) && String(img).trim() !== "") return num;
-        
+
         // Otherwise treat as a URI string
         return { uri: String(img) };
     };
@@ -103,12 +103,12 @@ const DetalleProdWeb = () => {
                     <View style={{ width: isSmallScreen ? '100%' : 420 }}>
                         {/* Imagen principal */}
                         <View style={{ borderWidth: 1, borderColor: '#9ca3af', backgroundColor: '#fff', padding: 16 }}>
-                                <Image
-                                    source={getImageSource(selectedImage)}
-                                    style={{ height: 320, width: '100%' }}
-                                    resizeMode="contain"
-                                />
-                            </View>
+                            <Image
+                                source={getImageSource(selectedImage)}
+                                style={{ height: 320, width: '100%' }}
+                                resizeMode="contain"
+                            />
+                        </View>
 
                         {/* Miniaturas */}
                         <View style={{ flexDirection: 'row', gap: 8, marginTop: 12 }}>
@@ -180,7 +180,7 @@ const DetalleProdWeb = () => {
                         <View style={{ marginTop: 16 }}>
                             <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 18, color: '#000' }}>Material:</Text>
                             <Text style={{ fontFamily: 'OpenSans-Regular', fontSize: 14, color: '#000', marginTop: 4 }}>
-                                Roca volcanica
+                                Rodio
                             </Text>
                         </View>
 
@@ -226,55 +226,55 @@ const DetalleProdWeb = () => {
                         {/* Cantidad + Botón */}
                         <View style={{ marginTop: 20 }}>
                             <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 18, color: '#000', marginBottom: 12 }}>Cantidad</Text>
-                                {/* Cantidad + Botón */}
-                                <View style={{ 
-                                    flexDirection: isSmallScreen ? 'column' : 'row', 
-                                    alignItems: isSmallScreen ? 'flex-start' : 'center', 
-                                    gap: 16 
-                                }}>
-                                    {/* Selector de cantidad */}
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: '#6b7280' }}>
-                                        <Pressable
-                                            style={{ paddingHorizontal: 14, paddingVertical: 10 }}
-                                            onPress={() => setQuantity((c) => Math.max(1, c - 1))}
-                                        >
-                                            <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 16, color: '#000' }}>-</Text>
-                                        </Pressable>
-                                        <View style={{ paddingHorizontal: 16, justifyContent: 'center' }}>
-                                            <Text style={{ fontFamily: 'OpenSans-Regular', fontSize: 16, color: '#000' }}>{quantity}</Text>
-                                        </View>
-                                        <Pressable
-                                            style={{ paddingHorizontal: 14, paddingVertical: 10 }}
-                                            onPress={() => setQuantity((c) => c + 1)}
-                                        >
-                                            <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 16, color: '#000' }}>+</Text>
-                                        </Pressable>
-                                    </View>
-
-                                    {/* Botón AGREGAR AL CARRITO */}
+                            {/* Cantidad + Botón */}
+                            <View style={{
+                                flexDirection: isSmallScreen ? 'column' : 'row',
+                                alignItems: isSmallScreen ? 'flex-start' : 'center',
+                                gap: 16
+                            }}>
+                                {/* Selector de cantidad */}
+                                <View style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: '#6b7280' }}>
                                     <Pressable
-                                        style={{
-                                            backgroundColor: '#FFD700',
-                                            paddingHorizontal: 32,
-                                            paddingVertical: 12,
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderRadius: 5,
-                                            width: isSmallScreen ? '100%' : 'auto'
-                                        }}
-                                        onPress={() => {
-                                            addItem({
-                                                id: String(id),
-                                                nombre: productNombre,
-                                                precio: productPrecio,
-                                                imagen: selectedImage,
-                                                cantidad: quantity
-                                            });
-                                        }}
+                                        style={{ paddingHorizontal: 14, paddingVertical: 10 }}
+                                        onPress={() => setQuantity((c) => Math.max(1, c - 1))}
                                     >
-                                        <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 13, color: '#000' }}>AGREGAR AL CARRITO</Text>
+                                        <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 16, color: '#000' }}>-</Text>
+                                    </Pressable>
+                                    <View style={{ paddingHorizontal: 16, justifyContent: 'center' }}>
+                                        <Text style={{ fontFamily: 'OpenSans-Regular', fontSize: 16, color: '#000' }}>{quantity}</Text>
+                                    </View>
+                                    <Pressable
+                                        style={{ paddingHorizontal: 14, paddingVertical: 10 }}
+                                        onPress={() => setQuantity((c) => c + 1)}
+                                    >
+                                        <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 16, color: '#000' }}>+</Text>
                                     </Pressable>
                                 </View>
+
+                                {/* Botón AGREGAR AL CARRITO */}
+                                <Pressable
+                                    style={{
+                                        backgroundColor: '#FFD700',
+                                        paddingHorizontal: 32,
+                                        paddingVertical: 12,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        borderRadius: 5,
+                                        width: isSmallScreen ? '100%' : 'auto'
+                                    }}
+                                    onPress={() => {
+                                        addItem({
+                                            id: String(id),
+                                            nombre: productNombre,
+                                            precio: productPrecio,
+                                            imagen: selectedImage,
+                                            cantidad: quantity
+                                        });
+                                    }}
+                                >
+                                    <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 13, color: '#000' }}>AGREGAR AL CARRITO</Text>
+                                </Pressable>
+                            </View>
                         </View>
                     </View>
                 </View>

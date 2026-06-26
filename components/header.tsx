@@ -65,7 +65,7 @@ const Header = () => {
     const menuItems = [
         { label: 'Inicio', route: '/' },
         { label: 'Catálogo', route: '/catalogo' },
-        { label: 'Nosotros', route: '/nosotros' },
+        ...(!isAuthenticated ? [{ label: 'Nosotros', route: '/nosotros' }] : []),
         { label: 'Contacto', route: '/contacto' },
     ];
 

@@ -19,7 +19,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const CheckoutWeb = () => {
     const { items: cartItems, clearSelectedItems } = useCartStore();
-    const { status, cart } = useLocalSearchParams<{ status?: string, cart?: string }>();
+    const { status, cart, orderId } = useLocalSearchParams<{ status?: string, cart?: string, orderId?: string }>();
+    const [isSuccessScreen, setIsSuccessScreen] = useState(false);
 
     const selectedItems = React.useMemo(() => {
         let urlCart = cart;
@@ -66,19 +67,11 @@ const CheckoutWeb = () => {
 
     useEffect(() => {
         if (status === 'success' || status === 'approved') {
-            Alert.alert(
-                "¡Pago Exitoso!",
-                "Tu pedido ha sido creado y pagado correctamente. ¡Muchas gracias por tu compra!",
-                [
-                    {
-                        text: "Ir al inicio",
-                        onPress: () => {
-                            clearSelectedItems();
-                            router.replace('/');
-                        }
-                    }
-                ]
-            );
+            if (orderId) {
+                api.post('/payments/confirmar-pago', { orderId }).catch(e => console.error("Error confirmando pago:", e));
+            }
+            setIsSuccessScreen(true);
+            clearSelectedItems();
         } else if (status === 'failure') {
             Alert.alert(
                 "Pago Fallido",
@@ -99,7 +92,7 @@ const CheckoutWeb = () => {
                 ]
             );
         }
-    }, [status]);
+    }, [status, orderId]);
 
     const [form, setForm] = useState({
         nombre: "",
@@ -149,6 +142,7 @@ const CheckoutWeb = () => {
             // 2. Crear la preferencia de pago en el backend
             const response = await api.post('/payments/crear-preferencia', {
                 productos: selectedItems,
+                cliente: form,
                 backUrlOrigin: origin,
             });
 
@@ -176,6 +170,36 @@ const CheckoutWeb = () => {
             setIsProcessing(false);
         }
     };
+
+    if (isSuccessScreen) {
+        return (
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+                <AppHeader platform="web" />
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20, paddingBottom: 100 }}>
+                    <MaterialIcons name="check-circle" size={100} color="#4CAF50" />
+                    <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#111827', marginTop: 24, textAlign: 'center' }}>
+                        ¡Gracias por tu compra!
+                    </Text>
+                    <Text style={{ fontSize: 18, color: '#4B5563', marginTop: 12, textAlign: 'center', maxWidth: 600, lineHeight: 28 }}>
+                        Tu pedido ha sido procesado exitosamente. Enviaremos los detalles a tu correo electrónico y pronto nos pondremos en contacto para coordinar el envío.
+                    </Text>
+                    {orderId && (
+                        <View style={{ backgroundColor: '#F3F4F6', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, marginTop: 20 }}>
+                            <Text style={{ fontSize: 16, color: '#4B5563', fontWeight: 'bold' }}>
+                                Pedido #{orderId}
+                            </Text>
+                        </View>
+                    )}
+                    <CustomButton
+                        className="mt-10 justify-center items-center rounded-xl bg-primary px-12 py-4 shadow-sm"
+                        onPress={() => router.replace('/')}
+                    >
+                        VOLVER AL INICIO
+                    </CustomButton>
+                </View>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
