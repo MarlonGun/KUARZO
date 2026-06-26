@@ -173,29 +173,47 @@ const CheckoutWeb = () => {
 
     if (isSuccessScreen) {
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#f8fafc' }}>
                 <AppHeader platform="web" />
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20, paddingBottom: 100 }}>
-                    <MaterialIcons name="check-circle" size={100} color="#4CAF50" />
-                    <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#111827', marginTop: 24, textAlign: 'center' }}>
-                        ¡Gracias por tu compra!
-                    </Text>
-                    <Text style={{ fontSize: 18, color: '#4B5563', marginTop: 12, textAlign: 'center', maxWidth: 600, lineHeight: 28 }}>
-                        Tu pedido ha sido procesado exitosamente. Enviaremos los detalles a tu correo electrónico y pronto nos pondremos en contacto para coordinar el envío.
-                    </Text>
-                    {orderId && (
-                        <View style={{ backgroundColor: '#F3F4F6', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, marginTop: 20 }}>
-                            <Text style={{ fontSize: 16, color: '#4B5563', fontWeight: 'bold' }}>
-                                Pedido #{orderId}
-                            </Text>
-                        </View>
-                    )}
-                    <CustomButton
-                        className="mt-10 justify-center items-center rounded-xl bg-primary px-12 py-4 shadow-sm"
-                        onPress={() => router.replace('/')}
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+                    <View 
+                        className="items-center bg-white p-10 rounded-3xl shadow-sm" 
+                        style={{ maxWidth: 600, width: '100%', shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 15, elevation: 5, borderWidth: 1, borderColor: '#f1f5f9' }}
                     >
-                        VOLVER AL INICIO
-                    </CustomButton>
+                        {/* Icono de Éxito */}
+                        <View className="bg-[#dcfce7] rounded-full p-6 mb-6">
+                            <MaterialIcons name="check-circle" size={80} color="#22c55e" />
+                        </View>
+                        
+                        {/* Título Principal */}
+                        <Text className="font-roboto-bold text-3xl md:text-4xl text-[#0f172a] text-center mb-4">
+                            ¡Pago Exitoso!
+                        </Text>
+                        
+                        {/* Mensaje Descriptivo */}
+                        <Text className="font-opensans-regular text-base text-[#64748b] text-center mb-8 leading-relaxed">
+                            Tu compra se ha procesado correctamente y ya estamos preparando tu pedido. Enviaremos los detalles a tu correo electrónico.
+                        </Text>
+
+                        {/* Tarjeta del Número de Pedido */}
+                        {orderId && (
+                            <View className="w-full bg-[#f8fafc] border border-[#e2e8f0] rounded-2xl py-5 px-6 mb-8 flex-row justify-between items-center">
+                                <View>
+                                    <Text className="font-opensans-regular text-xs text-[#64748b] uppercase tracking-wider mb-1 font-bold">Número de Pedido</Text>
+                                    <Text className="font-roboto-bold text-2xl text-[#0f172a]">#{orderId}</Text>
+                                </View>
+                                <MaterialIcons name="local-shipping" size={32} color="#94a3b8" />
+                            </View>
+                        )}
+
+                        {/* Botón de Acción */}
+                        <CustomButton
+                            className="w-full justify-center items-center rounded-xl bg-primary py-4 shadow-sm"
+                            onPress={() => router.replace('/')}
+                        >
+                            SEGUIR COMPRANDO
+                        </CustomButton>
+                    </View>
                 </View>
             </SafeAreaView>
         );

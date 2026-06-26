@@ -141,7 +141,6 @@ const LoginWeb: React.FC = () => {
                             color: '#f97316',
                             margin: 10
                         }}>
-                            ¿Olvidaste tu contraseña?
                         </Text>
                     </Pressable>
 
