@@ -6,7 +6,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import AppFooter from "@/components/AppFooter";
 import AppHeader from "@/components/AppHeader";
-import { CardProduct } from "@/components/CardProduct";
 import Carrusel from "@/components/Carrusel";
 import api from "@/src/services/api";
 import { useCartStore } from "@/src/store/useCartStore";
@@ -103,14 +102,6 @@ const HomeWeb = () => {
             <Carrusel
               type="products"
               products={featuredCarousel1}
-              onProductPress={goToDetail}
-            />
-          </View>
-          
-          <View style={{ marginBottom: 80 }}>
-            <Carrusel
-              type="products"
-              products={featuredCarousel2}
               onProductPress={goToDetail}
             />
           </View>

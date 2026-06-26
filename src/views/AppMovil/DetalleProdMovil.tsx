@@ -1,6 +1,6 @@
+import BarrNaveg from '@/components/BarrNaveg';
 import { useCartStore } from '@/src/store/useCartStore';
 import { MaterialIcons } from '@expo/vector-icons';
-import BarrNaveg from '@/components/BarrNaveg';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
@@ -209,7 +209,7 @@ const DetalleProdMovil = () => {
                     <View style={{ marginTop: 16 }}>
                         <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 16, color: '#111827' }}>Material:</Text>
                         <Text style={{ fontFamily: 'OpenSans-Regular', fontSize: 14, color: '#6b7280', marginTop: 4 }}>
-                            Roca volcánica
+                            Rodio
                         </Text>
                     </View>
 
@@ -217,35 +217,35 @@ const DetalleProdMovil = () => {
                     <View style={{ borderTopWidth: 1, borderColor: '#f3f4f6', marginTop: 16 }} />
 
                     {/* Color */}
-                        {localProductImages.length > 1 && (
-                            <View style={{ marginTop: 16 }}>
-                                <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 18, color: '#000' }}>Variaciones disponibles:</Text>
-                                <View style={{ flexDirection: 'row', gap: 8, marginTop: 12 }}>
-                                    {localProductImages.map((img, index) => {
-                                        const active = img === selectedImage;
-                                        return (
-                                            <Pressable
-                                                key={index}
-                                                onPress={() => setSelectedImage(img)}
-                                                style={{
-                                                    width: 56,
-                                                    height: 56,
-                                                    borderWidth: active ? 2 : 1,
-                                                    borderColor: active ? '#FED20F' : '#9ca3af',
-                                                    padding: 3,
-                                                }}
-                                            >
-                                                <Image
-                                                    source={getImageSource(img)}
-                                                    style={{ height: '100%', width: '100%' }}
-                                                    resizeMode="contain"
-                                                />
-                                            </Pressable>
-                                        );
-                                    })}
-                                </View>
+                    {localProductImages.length > 1 && (
+                        <View style={{ marginTop: 16 }}>
+                            <Text style={{ fontFamily: 'Roboto-Bold', fontSize: 18, color: '#000' }}>Variaciones disponibles:</Text>
+                            <View style={{ flexDirection: 'row', gap: 8, marginTop: 12 }}>
+                                {localProductImages.map((img, index) => {
+                                    const active = img === selectedImage;
+                                    return (
+                                        <Pressable
+                                            key={index}
+                                            onPress={() => setSelectedImage(img)}
+                                            style={{
+                                                width: 56,
+                                                height: 56,
+                                                borderWidth: active ? 2 : 1,
+                                                borderColor: active ? '#FED20F' : '#9ca3af',
+                                                padding: 3,
+                                            }}
+                                        >
+                                            <Image
+                                                source={getImageSource(img)}
+                                                style={{ height: '100%', width: '100%' }}
+                                                resizeMode="contain"
+                                            />
+                                        </Pressable>
+                                    );
+                                })}
                             </View>
-                        )}
+                        </View>
+                    )}
 
                     {/* Cantidad + Botón */}
                     <View style={{ marginTop: 24, marginBottom: 20 }}>
