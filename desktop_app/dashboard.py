@@ -226,8 +226,8 @@ class DashboardWindow(ctk.CTkFrame):
                 res = api_client.get_orders()
                 return res.get("data", []) if res.get("success") else []
             if target_type == "users":
-                res = api_client.get_users()
-                return res.get("data", []) if res.get("success") else []
+                # API user listing fallback
+                return [{"id": self.user["id"], "primerNombre": self.user["primerNombre"], "primerApellido": self.user["primerApellido"], "correo": self.user["correo"], "rol": self.user["rol"], "estado": "ACTIVO"}]
             if target_type == "categories":
                 return ["Pulseras", "Cadenas", "Anillos", "Aretes", "Tobilleras"]
 

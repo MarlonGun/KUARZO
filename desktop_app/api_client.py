@@ -228,36 +228,5 @@ class ApiClient:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    # --- USERS MANAGEMENT ---
-    def get_users(self):
-        """Endpoint: GET /api/usuarios"""
-        try:
-            r = self._request("GET", "/usuarios")
-            if r.status_code == 200:
-                return {"success": True, "data": r.json()}
-            return {"success": False, "error": r.text}
-        except Exception as e:
-            return {"success": False, "error": str(e)}
-
-    def update_user_status(self, user_id, status):
-        """Endpoint: PUT /api/usuarios/:id/estado"""
-        try:
-            r = self._request("PUT", f"/usuarios/{user_id}/estado", json={"estado": status})
-            if r.status_code in [200, 204]:
-                return {"success": True}
-            return {"success": False, "error": r.text}
-        except Exception as e:
-            return {"success": False, "error": str(e)}
-
-    def update_user_role(self, user_id, role_id):
-        """Endpoint: PUT /api/usuarios/:id/rol"""
-        try:
-            r = self._request("PUT", f"/usuarios/{user_id}/rol", json={"rolId": role_id})
-            if r.status_code in [200, 204]:
-                return {"success": True}
-            return {"success": False, "error": r.text}
-        except Exception as e:
-            return {"success": False, "error": str(e)}
-
 # Global API Client instance
 api_client = ApiClient()
